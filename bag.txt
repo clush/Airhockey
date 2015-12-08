@@ -1,0 +1,11 @@
+bag enthält
+bag.image
+bag.time_diff
+bag.puck.position_pixel/position/radius_unscaled/detection_time/velocity/direction/path(2-dim Array, 2. Dim. (bag.puck.position, bag.puck.direction, bag.puck.velocity, bag.puck.detection_time))
+bag.is_table_setup
+bag.table_boundaries_point
+
+
+bag.next
+    image  (nur wennn table Setup noch nicht abgeschlossen)
+    puck.radius_unscaled
