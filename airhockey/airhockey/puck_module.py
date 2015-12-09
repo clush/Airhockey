@@ -75,6 +75,7 @@ class PuckPositionBuffer:
             remaining_time = current_time - path_part[3]
             direction = vector.mul_by(path_part[1], path_part[2] * remaining_time)
             bag.puck.predicted_position = vector.add(path_part[0], direction)
+            
 
         elif 'position' in bag.puck:
 
@@ -311,7 +312,7 @@ class PuckDetection(common.Component):
     PARAM1      = 200   # Higher threshold passed to the Canny edge detector. The lower threshold is half the size of PARAM1
     PARAM2      = 30    # Accumulator threshold for the circle centers at the detection stage (the smaller it is, the more false circles)
     MIN_RADIUS  = 10    # Minimum circle radius
-    MAX_RADIUS  = 30    # Maximum circle radius
+    MAX_RADIUS  = 20    # Maximum circle radius
 
     def __init__(self, event_handler, **kwargs):            #aufgerufen
         super(PuckDetection, self).__init__(event_handler)

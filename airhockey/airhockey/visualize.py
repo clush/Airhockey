@@ -36,7 +36,7 @@ class SimpleImageDisplay(common.Component):
 class PuckImageDisplay(SimpleImageDisplay):
 
     listens = ['puck']
-    raises = ["datatransfer"]
+    raises = ["strategy"]
 
     def draw_table_boundaries(self, bag):
         """
@@ -255,7 +255,7 @@ class TableSetupImageDisplay(PuckImageDisplay):
         self.update_self_and_bag(bag)
 
         super(TableSetupImageDisplay, self).handle_event_puck(bag)
-        self.event_handler.raise_event("datatransfer", bag)
+        self.event_handler.raise_event("strategy", bag)
 
 
 class TableSetupSimulationImageDisplay(SimulationImageDisplay, TableSetupImageDisplay):
