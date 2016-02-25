@@ -94,7 +94,6 @@ class RobotConnection():
 class Strategy(common.Component):
   
     listens = ["strategy"]
-    k_max = -1000
     
     def __init__(self, eventhandler):
 	super(Strategy, self).__init__(eventhandler)
@@ -107,11 +106,11 @@ class Strategy(common.Component):
         :param bag: The parameter bag.
         :return: point between Goal an puck with x Koordinates 0.1
         """
-        positionGoal = [0,0.5]
+        positionGoal = [0, 0.5]
         directionGoalToPuck = vector.from_to(bag.puck.position, positionGoal)
         return self.CrossXLine(bag, 0.1, positionGoal, directionGoalToPuck)
        
-    def CrossXLine(self,bag, xLine, startposition = None, direction = None,):
+    def CrossXLine(self,bag, xLine, startposition = None, direction = None):
         """
         calculates the crossing point of a line with x-koordinates xLine
         :param bag: The parameter bag.
@@ -120,35 +119,28 @@ class Strategy(common.Component):
         :param direction: movingdirection of the Puck(if None the value from the bag is used)
         :return: the crossing point of a line with x-koordinates xLine
         """
+        yBorderBy0 = 0
+        yBorderBy1 = 1
         if startposition == None:
             startposition = bag.puck.position
         if direction == None:
 	    if bag.puck.direction == {}:
 	      return None
             direction = bag.puck.direction
-        """
-        print("x")
-        print(startposition)
-        print(direction)
-        """
         
         if direction[0] == 0:
 	  print("direction 0")
 	  return None
         k = (xLine - startposition[0])/direction[0]
-        #print(k)
-        if k > 0:
-            return self.MoveBetweenPuckAndGoal(bag)
-	if k < self.k_max:
-	  print("k zu klein")
-	  return None
         yPosition = startposition[1] + k * direction[1]
-        if yPosition < 0:
-            hitpointBorder = self.CrossYLine(bag, 0, startposition, direction)
-            return self.CrossXLine(bag, xLine, hitpointBorder, [direction[0], -direction[1]])
-        if yPosition > 1:
-            hitpointBorder = self.CrossYLine(bag, 1, startposition, direction)
-            return self.CrossXLine(bag, xLine, hitpointBorder, [direction[0], -direction[1]])
+        
+        #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, diesen solange an der Spielfeldbegrenzung spiegeln bis dieser innerhalb des Spielfeld liegt
+        while (yPosition < yBorderBy0) or (yPosition > yBorderBy1):
+	  if yPosition < yBorderBy0:
+	      yPosition = yBorderBy0 -(yPosition - yBorderBy0)	     
+	  if yPosition > yBorderBy1:
+	      yPosition = yBorderBy1 -(yPosition - yBorderBy1)
+	      
         return [xLine, yPosition]
     
     def CrossYLine(self,bag, yLine, startposition = None, direction = None):
@@ -160,36 +152,31 @@ class Strategy(common.Component):
         :param direction: movingdirection of the Puck(if None the value from the bag is used)
         :return: the crossing point of a line with y-koordinates yLine
         """
+        
+        xBorderBy0 = 0
+        xBorderBy1 = 1
+        
         if startposition == None:
-            startposition = bag.puck.position
+          startposition = bag.puck.position
         if startposition == None:
 	  return None
         if direction == None:
-	    if bag.puck.direction == {}:
-	      return None
-            direction = bag.puck.direction
+	  if bag.puck.direction == {}:
+	    return None
+          direction = bag.puck.direction
         if direction[1] == 0:
 	  print("direction 0")
 	  return None
-	"""
-	print("y")
-        print(startposition)
-        print(direction)
-        """
+	
         k = (yLine - startposition[1])/direction[1]
-        #print(k)
-        if k > 0:
-            return self.MoveBetweenPuckAndGoal(bag)
-	if k < self.k_max:
-	  print("k zu klein")
-	  return None
         xPosition = startposition[0] + k * direction[0]
-        if xPosition < 0:
-            hitpointBorder = self.CrossXLine(bag, 0, startposition, direction)
-            return self.CrossYLine(bag, yLine, hitpointBorder, [-direction[0], direction[1]])
-        if xPosition > 1:
-            hitpointBorder = self.CrossXLine(bag, 1, startposition, direction)
-            return self.CrossYLine(bag, yLine, hitpointBorder, [-direction[0], direction[1]])
+        
+        while (xPosition < xBorderBy0) or (xPosition > xBorderBy1):
+	  if xPosition < 0:
+	    xPosition = xPosition - (xBorderBy0 - xPosition)
+	  if xPosition > 1:
+	    xPosition = xPosition - (xBorderBy1 - xPosition)
+           
         return [xPosition, yLine]
       
     
@@ -197,17 +184,15 @@ class Strategy(common.Component):
     def handle_event_strategy(self, bag):
 	if bag.is_table_setup:
 	  return
-	"""
-        if not roboter.CanMove():
-            return
-        """
         #Roboter auf die Position bewegen auf die sich der Puck zu bewegt mit der x-Koordinate 0.1
-        
-        koordinates = self.CrossXLine(bag, 0.1)
+        if (bag.puck.direction != {}) and (bag.puck.direction[0] >= 0):
+	  koordinates = [0.1, 0.5] #Bewege dich vors Tor
+	else:
+	  koordinates = self.CrossXLine(bag, 0.1)
         #if not koordinates == None:
 	#  self.roboter.SendKoordinatesToRoboter(koordinates)
 	
-	print(koordinates)
+	#print(koordinates)
 	#koordinates = [0.1, bag.puck.position[1]]
 	if not (koordinates == None) and (abs(vector.length(vector.from_to(koordinates, self.oldKoordinates))) > 0.05):
 	  if self.roboter.SendKoordinatesToRoboter(koordinates):
