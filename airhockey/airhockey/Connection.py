@@ -36,9 +36,8 @@ class RobotConnection():
 	return s
     
     def SendKoordinatesToRoboter(self, koordinates):
-	start = time.time()
-	self.connection = self.ConnectToSocket()
-	if self.connection == None:
+	connection = self.ConnectToSocket()
+	if connection == None:
 	  print("keine Verbindung") 
 	  return False
 	xRob = koordinates[0] * self.tableDepth
@@ -52,25 +51,19 @@ class RobotConnection():
 	  yRob = self.RobYMax
 	if yRob < 0:
 	  yRob = 0
+	koordinateString = str(yRob) + ";" + str(xRob)
         try:
-            self.connection.send(str(yRob) + ";" + str(xRob))
+           sendData = connection.send(koordinateString)
+           if sendData < len(koordinateString):
+	      return False
+	   connection.close()
+           return True
         except socket.timeout:
-            pass
-	self.connection.close()
-	end = time.time()
-	print(end - start)
-	return True
+	   connection.close()
+           return False
     
     
-    def CanMove(self):
-        if not self.roboterIsMoving:
-            return True
-        try:
-            self.connection.recv(2048)
-            self.roboterIsMoving = False
-            return True
-        except socket.timeout:
-            return False
+    
         
         
         
