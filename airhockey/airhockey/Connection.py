@@ -12,10 +12,19 @@ class RobotConnection():
     timeoutTime = 1.0/60
     
     tableWidth = 795 #Breite des AirHockey-Tisches in mm
+    #Y-Auslenkung
     tableDepth = 1400 #Tiefe des AirHockey-Tisches in mm
+    #X-Auslenkung
     
-    RobXMax = 250 #Tiefe
-    RobYMax = 690 #Weite
+    RobXMax = 260 #maximale X-Auslenkung des Roboters
+    RobYMax = 690 #maximale Y-Auslenkung des Roboters
+    
+    durchmesserPuck = 63 #Radius des Puckes in mm
+    durchmesserSchlaeger = 95 #Radius des Schlaeger in mm
+    
+    tableXMax = tableDepth - durchmesserSchlaeger
+    tableYMax = tableWidth - durchmesserSchlaeger 
+
     
     
     def __init__(self):
@@ -37,26 +46,25 @@ class RobotConnection():
     
     def SendKoordinatesToRoboter(self, koordinates):
 	connection = self.ConnectToSocket()
-	if connection == None:
-	  print("keine Verbindung") 
+	if connection == None: 
 	  return False
-	xRob = koordinates[0] * self.tableDepth
+	xRob = (koordinates[0] * self.tableXMax) - self.durchmesserSchlaeger/2 + koordinates[0] * self.durchmesserSchlaeger
 	if xRob > self.RobXMax:
 	  xRob = self.RobXMax
 	if xRob < 0:
 	  xRob = 0
 	
-	yRob = koordinates[1] * self.tableWidth
+	yRob = (koordinates[1] * self.tableYMax) - self.durchmesserSchlaeger/2 + koordinates[1] * self.durchmesserSchlaeger
 	if yRob > self.RobYMax:
 	  yRob = self.RobYMax
 	if yRob < 0:
 	  yRob = 0
-	koordinateString = str(yRob) + ";" + str(xRob)
+	koordinateString = str(xRob) + ";" + str(yRob)
         try:
            sendData = connection.send(koordinateString)
+	   connection.close()
            if sendData < len(koordinateString):
 	      return False
-	   connection.close()
            return True
         except socket.timeout:
 	   connection.close()
