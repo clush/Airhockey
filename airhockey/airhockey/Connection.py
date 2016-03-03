@@ -53,24 +53,7 @@ class RobotConnection():
 	if yRob < 0:
 	  yRob = 0
         try:
-            #self.connection.send(str(xRob))
-            
-            """
-	    try:
-	      self.connection.recv(2048)
-	    except socket.timeout:
-	      pass
-	    """
-            self.connection.send(str(yRob))
-            """
-            while True:
-	      try:
-		self.connection.recv(2048)
-		break
-	      except socket.timeout:
-		pass
-            self.roboterIsMoving = True
-            """
+            self.connection.send(str(yRob) + ";" + str(xRob))
         except socket.timeout:
             pass
 	self.connection.close()
