@@ -115,8 +115,8 @@ class Strategy(common.Component):
         if direction[0] == 0:
 	  print("direction 0")
 	  return None
-        k = (xLine - startposition[0])/direction[0]
-        yPosition = startposition[1] + k * direction[1]
+        k = (xLine - startposition[0])/(direction[0] * bag.puck.velocity)
+        yPosition = startposition[1] + k * direction[1] * bag.puck.velocity
         
         #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, diesen solange an der Spielfeldbegrenzung spiegeln bis dieser innerhalb des Spielfeld liegt
         while (yPosition < yBorderBy0) or (yPosition > yBorderBy1):
@@ -152,8 +152,8 @@ class Strategy(common.Component):
 	  print("direction 0")
 	  return None
 	
-        k = (yLine - startposition[1])/direction[1]
-        xPosition = startposition[0] + k * direction[0]
+        k = (yLine - startposition[1])/(direction[1] * bag.puck.velocity)
+        xPosition = startposition[0] + k * direction[0] * bag.puck.velocity
         
         while (xPosition < xBorderBy0) or (xPosition > xBorderBy1):
 	  if xPosition < 0:
@@ -166,6 +166,8 @@ class Strategy(common.Component):
     
               
     def handle_event_strategy(self, bag):
+      #print(bag.puck.direction)
+      
 	if bag.is_table_setup:
 	  return
         #Roboter auf die Position bewegen auf die sich der Puck zu bewegt mit der x-Koordinate 0.1
@@ -181,3 +183,7 @@ class Strategy(common.Component):
 	if not (koordinates == None) and (abs(vector.length(vector.from_to(koordinates, self.oldKoordinates))) > 0.05):
 	  if self.roboter.SendKoordinatesToRoboter(koordinates):
 	    self.oldKoordinates = koordinates
+	 
+	 
+	 #TODO Protokollfunktion niederschreiben der Koordinaten des Puktes, der Richtung, der position des Roboters und der berechneten Abfangposition
+	 #TODO Roboter nicht komplett bewegen sondern, in kleineren Schritten. erhöht die Korrigierbarkeit

@@ -7,6 +7,16 @@ import numpy as np
 import time
 
 
+def different_direction(direction1, direction2):
+       if isPositive(direction1[0]) != isPositive(direction2[0]):
+          return True
+       if isPositive(direction1[1]) != isPositive(direction2[1]):
+	  return True
+       return False
+       
+def isPositive(value):
+       return value > 0
+
 class PuckPositionBuffer:
 
     DEFAULT_BUFFER_SIZE = 5
@@ -88,6 +98,7 @@ class PuckPositionBuffer:
         :param bag: The parameter bag
         :return:
         """
+        #TODO ueberlegen ob nutzen oder loeschen
         predicted_position_pixel = vector.coord_to_image_space(bag.puck.predicted_position, bag.table_boundaries)
         diff = vector.length(vector.from_to(bag.puck.position_pixel, predicted_position_pixel))
 
@@ -107,14 +118,22 @@ class PuckPositionBuffer:
         # only add if we have a point
         additional = 1
         if 'position' in bag.puck:
-            self.buffer.append((bag.puck.position[0], bag.puck.position[1], bag.puck.detection_time))
-            additional = 0
+	   #Wenn die Richtung der letzten Position in eine andere Richtung zeigt als die zuletzt berechnete, wird der Buffer geleert
+	   if not self.is_empty() and bag.puck.direction != {}:
+	      direction = vector.from_to((self.buffer[-1][0],self.buffer[-1][1]), bag.puck.position)
+	      if different_direction(direction, bag.puck.direction):
+		  self._reset()
+		  #TODO nicht sofort beim ersten mal loeschen, sondern erst beim 2. mal um ausreisser zu vermeiden
+           self.buffer.append((bag.puck.position[0], bag.puck.position[1], bag.puck.detection_time))
+           additional = 0
 
         # remove an old entry anyways (clear buffer over time)
         if len(self.buffer) + additional > self.buffer_size:
-            self.buffer.pop(0)
+	   self.buffer.pop(0)
+        
+    
 
-    def handle_new_point(self, bag):
+    def handle_new_point(self, bag): #aufgerufen
         """
         Handles a new puck position.
         :param bag: The parameter bag.
@@ -123,6 +142,7 @@ class PuckPositionBuffer:
 
         # predict position and check for wild shot
         self._predict_position(bag, bag.puck.detection_time)
+        #gibt momentan immer False zurueck
         if self._check_for_wild_shot(bag):
             print("Wild shot detected: expected: %s, detected: %s" % (str(bag.puck.predicted_position), str(bag.puck.position)))
             self.use_predicted_point(bag)
