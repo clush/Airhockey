@@ -1,6 +1,6 @@
 import common
 import vector
-
+import const
 import cv2
 import cv2.cv as cv
 import numpy as np
@@ -15,23 +15,14 @@ def different_direction(direction1, direction2):
        return False
        
 def isPositive(value):
-       return value > 0
+       return value >= 0
 
 class PuckPositionBuffer:
 
-    DEFAULT_BUFFER_SIZE = 5
-
-    # The acceptable difference between the next predicted and detected position
-    ACCEPTABLE_PUCK_POSITION_DIFF = 100
-
-    # The time in SECONDS for which the puck path should be predicted
-    TABLE_BOUNDARIES_COLLISION_FORECAST_TIME = 0.5
-
-    # The maximum amount of successive predictions
-    MAX_SUCCESSIVE_PREDICTION_AMOUNT = 4
+    
 
     def __init__(self, buffer_size=None):           #aufgerufen
-        self.buffer_size = (buffer_size if buffer_size is not None else self.DEFAULT_BUFFER_SIZE)
+        self.buffer_size = (buffer_size if buffer_size is not None else const.CONST.DEFAULT_BUFFER_SIZE)
 
         # the point buffer
         self.buffer = []
@@ -118,12 +109,8 @@ class PuckPositionBuffer:
         # only add if we have a point
         additional = 1
         if 'position' in bag.puck:
-	   #Wenn die Richtung der letzten Position in eine andere Richtung zeigt als die zuletzt berechnete, wird der Buffer geleert
-	   if not self.is_empty() and bag.puck.direction != {}:
-	      direction = vector.from_to((self.buffer[-1][0],self.buffer[-1][1]), bag.puck.position)
-	      if different_direction(direction, bag.puck.direction):
-		  self._reset()
-		  #TODO nicht sofort beim ersten mal loeschen, sondern erst beim 2. mal um ausreisser zu vermeiden
+	   #print(str(bag.puck.olddirection))
+	   
            self.buffer.append((bag.puck.position[0], bag.puck.position[1], bag.puck.detection_time))
            additional = 0
 
@@ -152,7 +139,14 @@ class PuckPositionBuffer:
         self.prediction_count = 0
 
         # check if the puck flies in a different direction
-        # TODO: mirror all previous points on collision axis IF we have a collision and direction change
+	if ('predicted_position' in bag.puck) and (bag.puck.predicted_position != {}):
+	      bordervalue = vector.check_for_out_of_field(bag.puck.predicted_position)
+	      if bordervalue > 0:
+	         for buffervalue in self.buffer:
+		   point = vector.mirror_point_at_border(buffervalue, bordervalue)
+		   buffervalue = (point[0], point[1], buffervalue[2])
+		 bag.puck.predicted_position = vector.mirror_point_at_border(bag.puck.predicted_position, bordervalue)
+		 print("Puck muesste ausserhalb der Bande sein. Buffer wurde gespiegelt")
 
         # just add...
         self._add_point(bag)
@@ -172,7 +166,7 @@ class PuckPositionBuffer:
 
         # increase prediction count
         self.prediction_count += 1
-        if self.prediction_count > self.MAX_SUCCESSIVE_PREDICTION_AMOUNT:
+        if self.prediction_count > const.CONST.MAX_SUCCESSIVE_PREDICTION_AMOUNT:
             print("%i successive puck predictions; assuming the puck is out of the image" % self.prediction_count)
             self._reset()
             return
@@ -227,6 +221,7 @@ class PuckPositionBuffer:
         # add puck direction (normalized) and velocity
         bag.puck.velocity = vector.length(direction)
         bag.puck.direction = vector.normalize(direction)
+        bag.next.puck.olddirection = bag.puck.direction
 
     def _check_collision(self, from_position, to_position, movement):    #aufgerufen
         """
@@ -283,7 +278,7 @@ class PuckPositionBuffer:
             return
 
         if remaining_forecast_time is None:
-            remaining_forecast_time = self.TABLE_BOUNDARIES_COLLISION_FORECAST_TIME
+            remaining_forecast_time = const.CONST.TABLE_BOUNDARIES_COLLISION_FORECAST_TIME
 
         if 'path' not in bag.puck:
             bag.puck.path = []
@@ -325,15 +320,6 @@ class PuckDetection(common.Component):
     listens = ['image']
     raises = ['puck']
 
-    # Hough parameters
-    # TODO: config file
-    DP          = 1     # Inverse ratio of the accumulator resolution to the image resolution (keep at 1)
-    MIN_DIS     = 10    # Minimum distance between the centers of the detected circles (in one frame)
-    PARAM1      = 200   # Higher threshold passed to the Canny edge detector. The lower threshold is half the size of PARAM1
-    PARAM2      = 30    # Accumulator threshold for the circle centers at the detection stage (the smaller it is, the more false circles)
-    MIN_RADIUS  = 10    # Minimum circle radius
-    MAX_RADIUS  = 20    # Maximum circle radius
-
     def __init__(self, event_handler, **kwargs):            #aufgerufen
         super(PuckDetection, self).__init__(event_handler)
 
@@ -359,7 +345,7 @@ class PuckDetection(common.Component):
         # Convert to grayscale image so HoughCircles can use it (uses Canny internally)
         gray = cv2.cvtColor(bag.image, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (3, 3), 10)
-        circles = cv2.HoughCircles(gray, cv.CV_HOUGH_GRADIENT, self.DP, minDist=self.MIN_DIS, param1=self.PARAM1, param2=self.PARAM2, minRadius=self.MIN_RADIUS, maxRadius=self.MAX_RADIUS)
+        circles = cv2.HoughCircles(gray, cv.CV_HOUGH_GRADIENT, const.CONST.DP, minDist=const.CONST.MIN_DIS, param1=const.CONST.PARAM1, param2=const.CONST.PARAM2, minRadius=const.CONST.MIN_RADIUS, maxRadius=const.CONST.MAX_RADIUS)
 
         if circles is not None:
 
@@ -371,6 +357,7 @@ class PuckDetection(common.Component):
             y_coord = circles[0][0][1]
             radius  = circles[0][0][2]
 
+	    
             # scale and save stuff
             bag.puck.position_pixel = (x_coord, y_coord)
             bag.puck.position = vector.image_to_coord_space(bag.puck.position_pixel, bag.table_boundaries)

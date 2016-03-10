@@ -1,5 +1,6 @@
 import math
-
+import border
+import const
 
 def length(v):
     """
@@ -102,3 +103,43 @@ def coord_to_image_space(v, boundaries):
     """
     scaled = scale(v, boundaries[1][0] - boundaries[0][0], boundaries[1][1] - boundaries[0][1])
     return round((scaled[0] + boundaries[0][0], scaled[1] + boundaries[0][1]))
+  
+def mirror_point_into_field(point):
+    """
+    Mirrors a Point at the border if it is out of the boundarys
+    :param bag: the bag used in this program
+    :param point: the to mirroring point
+    :return: the mirrored point
+    """
+    bordervalue = check_for_out_of_field(point)
+    while bordervalue > 0:
+	  point = mirror_point_at_border(point, bordervalue)
+	  bordervalue = check_for_out_of_field(point)
+    return point
+   
+def mirror_point_at_border(point, bordervalue):
+    yPosition = point[1]
+    xPosition = point[0]
+    #TODO Stosszahl einberechnen beim Bandenabprall
+    if bordervalue == border.border.xBy0:
+      xPosition = const.CONST.xBorderBy0 - (xPosition - const.CONST.xBorderBy0)
+    if bordervalue == border.border.xBy1:
+      xPosition = const.CONST.xBorderBy1 - (xPosition - const.CONST.xBorderBy1)
+    if bordervalue == border.border.yBy0:
+      yPosition = const.CONST.yBorderBy0 -(yPosition - const.CONST.yBorderBy0)
+    if bordervalue == border.border.yBy1:
+      yPosition = const.CONST.yBorderBy1 -(yPosition - const.CONST.yBorderBy1)
+    return (xPosition, yPosition)
+   
+   
+def check_for_out_of_field(point):
+  if point[0] < const.CONST.xBorderBy0:
+    return border.border.xBy0
+  if point[0] > const.CONST.xBorderBy1:
+    return border.border.xBy1
+  if point[1] < const.CONST.yBorderBy0:
+    return border.border.yBy0
+  if point[1] > const.CONST.yBorderBy1:
+    return border.border.yBy1
+  return border.border.infield 
+   

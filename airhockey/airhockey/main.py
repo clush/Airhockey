@@ -3,6 +3,8 @@ from common import EventHandler, ComponentManager, Bag, AirhockeyException
 
 
 try:
+    protokoll=open("protokoll.txt","w")
+    protokoll.close()
     # create objects
     event_handler = EventHandler()
     component_manager = ComponentManager(event_handler)

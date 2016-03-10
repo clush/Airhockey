@@ -2,18 +2,18 @@ import common
 import vector
 import strategy
 import cv2
+import const
 
 
 class SimpleImageDisplay(common.Component):
 
     listens = ['image']    #wird in PuckimageDisplay ueberschrieben
 
-    WINDOW_TITLE = 'Puckerkennung'
 
     def __init__(self, event_handler):
         super(SimpleImageDisplay, self).__init__(event_handler)
 
-        cv2.namedWindow(self.WINDOW_TITLE)
+        cv2.namedWindow(const.CONST.WINDOW_TITLE)
 
     def __del__(self):
 
@@ -27,7 +27,7 @@ class SimpleImageDisplay(common.Component):
         :return:
         """
 
-        cv2.imshow(self.WINDOW_TITLE, bag.image)
+        cv2.imshow(const.CONST.WINDOW_TITLE, bag.image)
         k = cv2.waitKey(5) & 0xFF
         if k == 27:
             raise common.AirhockeyException("Operation cancelled by user")
@@ -191,7 +191,7 @@ class TableSetupImageDisplay(PuckImageDisplay):
     def __init__(self, event_handler):              #aufgerufen
         super(TableSetupImageDisplay, self).__init__(event_handler)
 
-        cv2.setMouseCallback(self.WINDOW_TITLE, self.mouse_click_handler)
+        cv2.setMouseCallback(const.CONST.WINDOW_TITLE, self.mouse_click_handler)
         self.last_is_table_setup = False
         self.next_table_boundaries = None
 

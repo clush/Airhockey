@@ -2,40 +2,21 @@ import common
 import socket
 import vector
 import time
+import const
 
 class RobotConnection():
-    
-    
-    
-    roboterIP = "192.168.28.121"
-    roboterPort = 1025
-    timeoutTime = 1.0/60
-    
-    tableWidth = 795 #Breite des AirHockey-Tisches in mm
-    #Y-Auslenkung
-    tableDepth = 1400 #Tiefe des AirHockey-Tisches in mm
-    #X-Auslenkung
-    
-    RobXMax = 260 #maximale X-Auslenkung des Roboters
-    RobYMax = 690 #maximale Y-Auslenkung des Roboters
-    
-    durchmesserPuck = 63 #Radius des Puckes in mm
-    durchmesserSchlaeger = 95 #Radius des Schlaeger in mm
-    
-    tableXMax = tableDepth - durchmesserSchlaeger
-    tableYMax = tableWidth - durchmesserSchlaeger 
 
     
     
     def __init__(self):
-        socket.setdefaulttimeout(self.timeoutTime)
+        socket.setdefaulttimeout(const.CONST.timeoutTime)
         #self.connection = self.ConnectToSocket()
         
     def ConnectToSocket(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
 	  start = time.time()
-	  s.connect((self.roboterIP, self.roboterPort))
+	  s.connect((const.CONST.roboterIP, const.CONST.roboterPort))
 	  end = time.time()
 	  print("connectet")
 	  print(end - start)
@@ -45,26 +26,25 @@ class RobotConnection():
 	return s
     
     def SendKoordinatesToRoboter(self, koordinates):
+	if koordinates == None:
+	  return False
+	
+	if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
+	  print("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes")
+	  return False
+	  
 	connection = self.ConnectToSocket()
 	if connection == None: 
 	  return False
-	xRob = (koordinates[0] * self.tableXMax) - self.durchmesserSchlaeger/2 + koordinates[0] * self.durchmesserSchlaeger
-	if xRob > self.RobXMax:
-	  xRob = self.RobXMax
-	if xRob < 0:
-	  xRob = 0
 	
-	yRob = (koordinates[1] * self.tableYMax) - self.durchmesserSchlaeger/2 + koordinates[1] * self.durchmesserSchlaeger
-	if yRob > self.RobYMax:
-	  yRob = self.RobYMax
-	if yRob < 0:
-	  yRob = 0
-	koordinateString = str(xRob) + ";" + str(yRob)
+	#Daten senden
+	koordinateString = str(koordinates[0]) + ";" + str(koordinates[1])
         try:
            sendData = connection.send(koordinateString)
 	   connection.close()
            if sendData < len(koordinateString):
 	      return False
+	   
            return True
         except socket.timeout:
 	   connection.close()
@@ -79,10 +59,11 @@ class Strategy(common.Component):
   
     listens = ["strategy"]
     
+    
     def __init__(self, eventhandler):
 	super(Strategy, self).__init__(eventhandler)
 	self.roboter=RobotConnection()
-	self.oldKoordinates = [0, 0]
+	self.oldRobotKoordinates = const.CONST.homePosition
   
     def MoveBetweenPuckAndGoal(self, bag):
         """
@@ -103,8 +84,7 @@ class Strategy(common.Component):
         :param direction: movingdirection of the Puck(if None the value from the bag is used)
         :return: the crossing point of a line with x-koordinates xLine
         """
-        yBorderBy0 = 0
-        yBorderBy1 = 1
+        
         if startposition == None:
             startposition = bag.puck.position
         if direction == None:
@@ -118,14 +98,8 @@ class Strategy(common.Component):
         k = (xLine - startposition[0])/(direction[0] * bag.puck.velocity)
         yPosition = startposition[1] + k * direction[1] * bag.puck.velocity
         
-        #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, diesen solange an der Spielfeldbegrenzung spiegeln bis dieser innerhalb des Spielfeld liegt
-        while (yPosition < yBorderBy0) or (yPosition > yBorderBy1):
-	  if yPosition < yBorderBy0:
-	      yPosition = yBorderBy0 -(yPosition - yBorderBy0)	     
-	  if yPosition > yBorderBy1:
-	      yPosition = yBorderBy1 -(yPosition - yBorderBy1)
-	      
-        return [xLine, yPosition]
+        #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, wird dieser vor dem zurueckgeben noch an der Spielfeldgranze gespiegelt
+        return vector.mirror_point_into_field([xLine, yPosition])
     
     def CrossYLine(self,bag, yLine, startposition = None, direction = None):
         """
@@ -137,8 +111,6 @@ class Strategy(common.Component):
         :return: the crossing point of a line with y-koordinates yLine
         """
         
-        xBorderBy0 = 0
-        xBorderBy1 = 1
         
         if startposition == None:
           startposition = bag.puck.position
@@ -155,13 +127,9 @@ class Strategy(common.Component):
         k = (yLine - startposition[1])/(direction[1] * bag.puck.velocity)
         xPosition = startposition[0] + k * direction[0] * bag.puck.velocity
         
-        while (xPosition < xBorderBy0) or (xPosition > xBorderBy1):
-	  if xPosition < 0:
-	    xPosition = xPosition - (xBorderBy0 - xPosition)
-	  if xPosition > 1:
-	    xPosition = xPosition - (xBorderBy1 - xPosition)
-           
-        return [xPosition, yLine]
+        
+        #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, wird dieser vor dem zurueckgeben noch an der Spielfeldgranze gespiegelt   
+        return vector.mirror_point_into_field([xPosition, yLine])
       
     
               
@@ -170,20 +138,66 @@ class Strategy(common.Component):
       
 	if bag.is_table_setup:
 	  return
-        #Roboter auf die Position bewegen auf die sich der Puck zu bewegt mit der x-Koordinate 0.1
+        #Wenn Puck sich von Roboter entfernt bewege sich der Roboter vors Tor ansonsten auf dem Schnittpunkt des Puckes mit der x-Achse 0,1.
         if (bag.puck.direction != {}) and (bag.puck.direction[0] >= 0):
 	  koordinates = [0.1, 0.5] #Bewege dich vors Tor
 	else:
 	  koordinates = self.CrossXLine(bag, 0.1)
-        #if not koordinates == None:
-	#  self.roboter.SendKoordinatesToRoboter(koordinates)
 	
-	#print(koordinates)
-	#koordinates = [0.1, bag.puck.position[1]]
-	if not (koordinates == None) and (abs(vector.length(vector.from_to(koordinates, self.oldKoordinates))) > 0.05):
-	  if self.roboter.SendKoordinatesToRoboter(koordinates):
-	    self.oldKoordinates = koordinates
+	robotKoordinates = self.calculateMovingPosition(koordinates)
+	
+	#sende Daten
+	if self.roboter.SendKoordinatesToRoboter(robotKoordinates):
+	  self.writeProtokoll(bag, robotKoordinates)
+	  self.oldRobotKoordinates = robotKoordinates
 	 
-	 
+
+    def calculateMovingPosition(self, koordinates):
+	if koordinates == None:
+	  return None
+	#Daten von Bild-Koordinatensystem ins Roboter-Koordinatensytem konvertieren
+	xRob = (koordinates[0] * const.CONST.tableXMax) - const.CONST.durchmesserSchlaeger/2 + koordinates[0] * const.CONST.durchmesserSchlaeger
+	if xRob > const.CONST.RobXMax:
+	  xRob = const.CONST.RobXMax
+	if xRob < 0:
+	  xRob = 0
+	
+	yRob = (koordinates[1] * const.CONST.tableYMax) - const.CONST.durchmesserSchlaeger/2 + koordinates[1] * const.CONST.durchmesserSchlaeger
+	if yRob > const.CONST.RobYMax:
+	  yRob = const.CONST.RobYMax
+	if yRob < 0:
+	  yRob = 0
+	
+	direction = vector.from_to(self.oldRobotKoordinates, [xRob,yRob])
+	distance = vector.length(direction)
+	"""
+	Wenn die Bewegung zu klein ist, werden keine Koordianten gesendet um die Kommunikation mit Roboter gering zu halten,
+	da fuer die Zeit der Bewegung der Roboter nicht ansprechbar ist
+	"""
+	if distance < const.CONST.minimumMovement:
+	  return None
+	
+	"""
+	Wenn der neue Punkt zu weit entfernt ist, wird dieser auf eine maximale Laenge gekuerzt, damit man evtl. neue 
+	Richtungsaenderungen des Puckes schneller reagieren kann
+	"""
+	if distance > const.CONST.maximumMovement:
+	  stepDirection = vector.mul_by(direction, 1.0 * const.CONST.maximumMovement / distance)
+	  return vector.add(self.oldRobotKoordinates, stepDirection)
+	
+	return [xRob, yRob]
+	
+    def writeProtokollWarning(self):
+      protokoll=open("protokoll.txt","a")
+      protokoll.write("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes\n")
+      protokoll.close()
+	
+    def writeProtokoll(self, bag, koordinates):
+      """if 'protokoll' not in bag:
+	protokoll=open("protokoll.txt","w")
+      else:"""
+      protokoll=open("protokoll.txt","a")
+      protokoll.write("aktuelle Roboterposition: "+ str(self.oldRobotKoordinates) + "; neue Roboterposition: " + str(koordinates) + "; Puckposition: " + str(bag.puck.position) +  "; Puckrichtung: " + str(bag.puck.direction) +"\n")
+      protokoll.close()
 	 #TODO Protokollfunktion niederschreiben der Koordinaten des Puktes, der Richtung, der position des Roboters und der berechneten Abfangposition
-	 #TODO Roboter nicht komplett bewegen sondern, in kleineren Schritten. erhöht die Korrigierbarkeit
+	 #TODO Roboter nicht komplett bewegen sondern, in kleineren Schritten. erhoeht die Korrigierbarkeit
