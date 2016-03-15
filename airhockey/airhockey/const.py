@@ -17,7 +17,7 @@ class CONST:
     tableYMax = tableWidth - durchmesserSchlaeger 
     
     minimumMovement = 50
-    maximumMovement = 150
+    maximumMovement = 690
     # Heimatposition des Roboters im Roboter-Koordinatensystem
     homePosition = [140, 400]
     
@@ -29,7 +29,7 @@ class CONST:
     # Port auf dem der Roboter lauscht
     roboterPort = 1025
     # die Zeit die das Programm auf eine Antwort vom Roboter wartet. sollte mindestens die haelfte der framerate der Kamera sein
-    timeoutTime = 1.0/60
+    timeoutTime = 1.0/100
     
     
     

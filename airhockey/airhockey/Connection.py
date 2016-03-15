@@ -11,15 +11,28 @@ class RobotConnection():
     def __init__(self):
         socket.setdefaulttimeout(const.CONST.timeoutTime)
         #self.connection = self.ConnectToSocket()
+        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	self.serversocket.bind(("192.168.28.222", 1025))
+	#become a server socket
+	self.serversocket.listen(1)
         
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+	self.serversocket.close()
+    
+    def __del__(self):
+	self.serversocket.close()
+    
     def ConnectToSocket(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-	  start = time.time()
+	  #start = time.time()
 	  s.connect((const.CONST.roboterIP, const.CONST.roboterPort))
-	  end = time.time()
-	  print("connectet")
-	  print(end - start)
+	  #end = time.time()
+	  #print("connectet")
+	  #print(end - start)
 	except Exception as e:
 	  return None
 	  #raise AirhockeyException("kann keine Verbindung aufbauen")
@@ -32,7 +45,26 @@ class RobotConnection():
 	if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
 	  print("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes")
 	  return False
-	  
+	"""
+	connection = self.ConnectToSocket()
+	if connection == None: 
+	  return False
+	"""
+	
+	try:
+	  (clientsocket, address) = self.serversocket.accept()
+	  koordinateString = str(koordinates[0]) + ";" + str(koordinates[1])
+	  sendData = clientsocket.send(koordinateString)
+	  clientsocket.close()
+	  if sendData < len(koordinateString):
+	      return False
+	   
+          return True
+	except Exception as e:
+	  return False
+	
+	"""
+	
 	connection = self.ConnectToSocket()
 	if connection == None: 
 	  return False
@@ -49,7 +81,7 @@ class RobotConnection():
         except socket.timeout:
 	   connection.close()
            return False
-    
+    """
     
     
         
@@ -83,8 +115,7 @@ class Strategy(common.Component):
         :param startposition: Position of the puck (if None the value from the bag is used)
         :param direction: movingdirection of the Puck(if None the value from the bag is used)
         :return: the crossing point of a line with x-koordinates xLine
-        """
-        
+        """        
         if startposition == None:
             startposition = bag.puck.position
         if direction == None:
@@ -93,13 +124,15 @@ class Strategy(common.Component):
             direction = bag.puck.direction
         
         if direction[0] == 0:
-	  print("direction 0")
+	  #print("direction 0")
 	  return None
-        k = (xLine - startposition[0])/(direction[0] * bag.puck.velocity)
-        yPosition = startposition[1] + k * direction[1] * bag.puck.velocity
+        timeToCrossXLine = (xLine - startposition[0])/(direction[0] * bag.puck.velocity)
+        yPosition = startposition[1] + timeToCrossXLine * direction[1] * bag.puck.velocity
         
+        #print(timeToCrossXLine)
         #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, wird dieser vor dem zurueckgeben noch an der Spielfeldgranze gespiegelt
-        return vector.mirror_point_into_field([xLine, yPosition])
+        koordinates = vector.mirror_point_into_field([xLine, yPosition])
+        return (koordinates[0], koordinates[1], timeToCrossXLine)
     
     def CrossYLine(self,bag, yLine, startposition = None, direction = None):
         """
@@ -109,9 +142,7 @@ class Strategy(common.Component):
         :param startposition: Position of the puck (if None the value from the bag is used)
         :param direction: movingdirection of the Puck(if None the value from the bag is used)
         :return: the crossing point of a line with y-koordinates yLine
-        """
-        
-        
+        """        
         if startposition == None:
           startposition = bag.puck.position
         if startposition == None:
@@ -121,15 +152,16 @@ class Strategy(common.Component):
 	    return None
           direction = bag.puck.direction
         if direction[1] == 0:
-	  print("direction 0")
+	  #print("direction 0")
 	  return None
 	
-        k = (yLine - startposition[1])/(direction[1] * bag.puck.velocity)
-        xPosition = startposition[0] + k * direction[0] * bag.puck.velocity
+        timeToCrossYLine = (yLine - startposition[1])/(direction[1] * bag.puck.velocity)
+        xPosition = startposition[0] + timeToCrossYLine * direction[0] * bag.puck.velocity
         
         
-        #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, wird dieser vor dem zurueckgeben noch an der Spielfeldgranze gespiegelt   
-        return vector.mirror_point_into_field([xPosition, yLine])
+        #Wenn der Puck ausserhalb der Spielfeldbegrenzung liegt, wird dieser vor dem zurueckgeben noch an der Spielfeldgranze gespiegelt 
+        koordinates = vector.mirror_point_into_field([xPosition, yLine])
+        return (koordinates[0], koordinates[1], timeToCrossYLine)
       
     
               
@@ -139,10 +171,7 @@ class Strategy(common.Component):
 	if bag.is_table_setup:
 	  return
         #Wenn Puck sich von Roboter entfernt bewege sich der Roboter vors Tor ansonsten auf dem Schnittpunkt des Puckes mit der x-Achse 0,1.
-        if (bag.puck.direction != {}) and (bag.puck.direction[0] >= 0):
-	  koordinates = [0.1, 0.5] #Bewege dich vors Tor
-	else:
-	  koordinates = self.CrossXLine(bag, 0.1)
+        koordinates = self.CrossXLine(bag, 0.1)
 	
 	robotKoordinates = self.calculateMovingPosition(koordinates)
 	
@@ -155,14 +184,32 @@ class Strategy(common.Component):
     def calculateMovingPosition(self, koordinates):
 	if koordinates == None:
 	  return None
+	#print(koordinates)
+	
+	if koordinates[2] > 4 or koordinates[2] < 0:
+	  return None
+	
+	
 	#Daten von Bild-Koordinatensystem ins Roboter-Koordinatensytem konvertieren
 	xRob = (koordinates[0] * const.CONST.tableXMax) - const.CONST.durchmesserSchlaeger/2 + koordinates[0] * const.CONST.durchmesserSchlaeger
+	#ueberpruefen ob Position innerhalb der Bewegungsgrenzen des Roboters liegt
 	if xRob > const.CONST.RobXMax:
 	  xRob = const.CONST.RobXMax
 	if xRob < 0:
 	  xRob = 0
 	
 	yRob = (koordinates[1] * const.CONST.tableYMax) - const.CONST.durchmesserSchlaeger/2 + koordinates[1] * const.CONST.durchmesserSchlaeger
+	"""
+	#Position auf unmittelbar vors Tor beschraenken
+	Torgroesse = 200
+	ymin = (const.CONST.RobYMax - Torgroesse) / 2.0
+	ymax = (const.CONST.RobYMax + Torgroesse) / 2.0
+	if yRob < ymin or yRob > ymax:
+	  return None
+	  """
+	  
+	
+	#ueberpruefen ob Position innerhalb der Bewegungsgrenzen des Roboters liegt
 	if yRob > const.CONST.RobYMax:
 	  yRob = const.CONST.RobYMax
 	if yRob < 0:
