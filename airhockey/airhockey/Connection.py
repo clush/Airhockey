@@ -15,6 +15,13 @@ class RobotConnection():
 	self.serversocket.bind(("192.168.28.222", 1025))
 	#become a server socket
 	self.serversocket.listen(1)
+	self.isMoving = False
+	while True:
+	  try:
+	    (self.clientsocket, self.address) = self.serversocket.accept()
+	    break
+	  except Exception:
+	    pass
         
     def __enter__(self):
         return self
@@ -52,13 +59,11 @@ class RobotConnection():
 	"""
 	
 	try:
-	  (clientsocket, address) = self.serversocket.accept()
 	  koordinateString = str(koordinates[0]) + ";" + str(koordinates[1])
-	  sendData = clientsocket.send(koordinateString)
-	  clientsocket.close()
+	  sendData = self.clientsocket.send(koordinateString)
 	  if sendData < len(koordinateString):
 	      return False
-	   
+	  self.isMoving = True
           return True
 	except Exception as e:
 	  return False
@@ -82,6 +87,18 @@ class RobotConnection():
 	   connection.close()
            return False
     """
+    
+    def canMove(self):
+      if not self.isMoving:
+	return True
+      try:
+	length = self.clientsocket.recv(1024)
+	if length == 0:
+	  return False
+	self.isMoving = False
+	return True
+      except Exception:
+	return False;
     
     
         
@@ -170,6 +187,7 @@ class Strategy(common.Component):
       
 	if bag.is_table_setup:
 	  return
+
         #Wenn Puck sich von Roboter entfernt bewege sich der Roboter vors Tor ansonsten auf dem Schnittpunkt des Puckes mit der x-Achse 0,1.
         koordinates = self.CrossXLine(bag, 0.1)
 	
@@ -185,8 +203,8 @@ class Strategy(common.Component):
 	if koordinates == None:
 	  return None
 	#print(koordinates)
-	
-	if koordinates[2] > 4 or koordinates[2] < 0:
+	#Roboter braucht rund 0,6 Sekunden um sich in Bewegung zu setzen. Deshalb soll er sich nicht bewegen wenn der der Puck schneller ist
+	if koordinates[2] > 4 or koordinates[2] < 0.6:
 	  return None
 	
 	
