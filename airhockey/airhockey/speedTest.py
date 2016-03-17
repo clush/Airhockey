@@ -60,13 +60,27 @@ roboter=Connection.RobotConnection()
 print("Server open")
 
 for i in range(0,700,10):
-  versuch(roboter, [0,0], [0,i])
+  versuch(roboter, [260,0], [260,i])
 
 printzeile()
 printzeile()
 
 for i in range (0,270,10):
-  versuch(roboter, [0, 0], [i, 0])
+  versuch(roboter, [0, 345], [i, 345])
+  
+  
+printzeile()
+printzeile()
+
+for i in range(0, 270, 10):
+  versuch(roboter, [0, 0], [i, i])
+
+printzeile()
+printzeile()
+
+for i in range(0, 270, 10):
+  versuch(roboter, [0, 350], [i, 350 + i])
+
 """
 versuch(roboter, [0,0], [0,0])
 versuch(roboter, [0,0], [0,100])
