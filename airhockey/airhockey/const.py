@@ -9,6 +9,13 @@ class CONST:
     
     RobXMax = 260 # maximale X-Auslenkung des Roboters
     RobYMax = 690 # maximale Y-Auslenkung des Roboters
+    #Robotergeschwindigkeit in x-Richtung
+    RobVx = 1200
+    #Robotergeschwindigkeit in Y-Richtung
+    RobVy = 1200
+    #Zeit die der Roboter benötigt um Befehl zu verarbeiten und sich in Bewegung zu setzen in Sekunden
+    RobLatenzzeit = 0.05
+    
     
     durchmesserPuck = 63 # Radius des Puckes in mm
     durchmesserSchlaeger = 95 #Radius des Schlaeger in mm

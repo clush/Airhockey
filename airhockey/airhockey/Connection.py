@@ -204,7 +204,7 @@ class Strategy(common.Component):
 	  return None
 	#print(koordinates)
 	#Roboter braucht rund 0,6 Sekunden um sich in Bewegung zu setzen. Deshalb soll er sich nicht bewegen wenn der der Puck schneller ist
-	if koordinates[2] > 4 or koordinates[2] < 0.6:
+	if koordinates[2] > 4 or koordinates[2] < const.CONST.RobLatenzzeit:
 	  return None
 	
 	
