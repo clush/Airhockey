@@ -9,12 +9,6 @@ class CONST:
     
     RobXMax = 260 # maximale X-Auslenkung des Roboters
     RobYMax = 690 # maximale Y-Auslenkung des Roboters
-    #Robotergeschwindigkeit in x-Richtung
-    RobVx = 1200
-    #Robotergeschwindigkeit in Y-Richtung
-    RobVy = 1200
-    #Zeit die der Roboter benötigt um Befehl zu verarbeiten und sich in Bewegung zu setzen in Sekunden
-    RobLatenzzeit = 0.05
     
     
     durchmesserPuck = 63 # Radius des Puckes in mm
@@ -26,7 +20,7 @@ class CONST:
     minimumMovement = 50
     maximumMovement = 690
     # Heimatposition des Roboters im Roboter-Koordinatensystem
-    homePosition = [140, 400]
+    homePosition = [0, 345]
     
     
     
@@ -72,7 +66,7 @@ class CONST:
     
     
     #TODO Radius einberechnen
-    yBorderBy0 = 0
-    yBorderBy1 = 1
-    xBorderBy0 = 0
-    xBorderBy1 = 1
+    yBorderBy0 = 0 + durchmesserPuck / 2.0 / tableWidth
+    yBorderBy1 = 1 - durchmesserPuck / 2.0 / tableWidth
+    xBorderBy0 = 0 + durchmesserPuck / 2.0 / tableDepth
+    xBorderBy1 = 1 - durchmesserPuck / 2.0 / tableDepth
