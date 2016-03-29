@@ -8,6 +8,7 @@ class CONST:
     # X-Auslenkung
     
     RobXMax = 260 # maximale X-Auslenkung des Roboters
+    RobXMaxMitte = 386 # maximale X-Auslenkung des Roboters in der Mitte des Tisches
     RobYMax = 690 # maximale Y-Auslenkung des Roboters
     
     

@@ -1,6 +1,8 @@
 import Connection
 import time
 import socket
+import math
+import const
 
 def versuch(roboter, startpunkt, endpunkt):
   print(endpunkt)
@@ -25,22 +27,31 @@ def printzeile():
   protokoll.write("\n")
   protokoll.close()
 
+#def xmax(y):
+ # return math.sqrt(math.pow(532, 2) - math.pow(const.CONST.RobYMax / 2.0 - y, 2)) - 145
 
 
+#protokoll=open("speedtest.csv","w")
+#protokoll.write("xStart;yStart;xEnde;yEnde;Zeit\n")
+#protokoll.close()
 
-protokoll=open("speedtest.csv","w")
-protokoll.write("xStart;yStart;xEnde;yEnde;Zeit\n")
-protokoll.close()
 roboter=Connection.RobotConnection()
 print("Server open")
 
+for i in range(0,690):
+  roboter.SendKoordinatesToRoboter([roboter.xmax(i), i])
+  print(i)
+  while not roboter.canMove():
+    pass
+
+"""
 for i in range(0,700,10):
   versuch(roboter, [130,0], [130,i])
 
 for i in range (0,270,10):
   versuch(roboter, [0, 172], [i, 172])
   
-
+"""
 """
 for i in range(0,700,10):
   versuch(roboter, [260,0], [260,i])

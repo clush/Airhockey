@@ -3,6 +3,7 @@ import socket
 import vector
 import time
 import const
+import math
 
 class RobotConnection():
 
@@ -48,10 +49,15 @@ class RobotConnection():
     def SendKoordinatesToRoboter(self, koordinates):
 	if koordinates == None:
 	  return False
-	
-	if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
-	  print("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes")
-	  return False
+	# Sofern sich das Ziel in der Mitte befindet, nehme die Maximalauslenkung der Mitte
+	if abs(koordinates[1] - const.CONST.RobYMax / 2.0) < 1:
+	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMaxMitte) or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
+	    print("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes")
+	    return False
+	else:
+	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax) or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
+	    print("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes")
+	    return False
 	"""
 	connection = self.ConnectToSocket()
 	if connection == None: 
@@ -59,7 +65,8 @@ class RobotConnection():
 	"""
 	
 	try:
-	  koordinateString = str(koordinates[0]) + ";" + str(koordinates[1])
+	  koordinateString = str(round(koordinates[0],1)) + ";" + str(round(koordinates[1],1))
+	  print(koordinateString)
 	  sendData = self.clientsocket.send(koordinateString)
 	  if sendData < len(koordinateString):
 	      return False
@@ -100,6 +107,8 @@ class RobotConnection():
       except Exception:
 	return False;
     
+    def xmax(self,y):
+      return round(math.sqrt(math.pow(532, 2) - math.pow(const.CONST.RobYMax / 2.0 - y, 2)) - 145, 1)
     
         
         
@@ -259,7 +268,7 @@ class Strategy(common.Component):
 	deltaX = self.oldRobotKoordinates[0] - koordinates[0]
 	deltaY = self.oldRobotKoordinates[1] - koordinates[1]
 	timeX = (deltaX + 163.23) / 1145.2
-	timeY = (deltaY + 316.955) / 1841.5
+	timeY = (deltaY + 238.24) / 1579.13
 	return timeX + timeY
       
     def decideStrategy(self, bag):
