@@ -18,7 +18,7 @@ class CONST:
     tableXMax = tableDepth - durchmesserSchlaeger
     tableYMax = tableWidth - durchmesserSchlaeger 
     
-    minimumMovement = 50
+    minimumMovement = 25
     maximumMovement = 690
     # Heimatposition des Roboters im Roboter-Koordinatensystem
     homePosition = [0, 345]
@@ -66,7 +66,7 @@ class CONST:
     WINDOW_TITLE = 'Puckerkennung'
     
     
-    #TODO Radius einberechnen
+   
     yBorderBy0 = 0 + durchmesserPuck / 2.0 / tableWidth
     yBorderBy1 = 1 - durchmesserPuck / 2.0 / tableWidth
     xBorderBy0 = 0 + durchmesserPuck / 2.0 / tableDepth

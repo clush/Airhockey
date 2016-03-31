@@ -60,7 +60,6 @@ class RobotConnection():
 	
 	try:
 	  koordinateString = str(round(koordinates[0],1)) + ";" + str(round(koordinates[1],1))
-	  print(koordinateString)
 	  sendData = self.clientsocket.send(koordinateString)
 	  if sendData < len(koordinateString):
 	      return False
@@ -104,16 +103,16 @@ class RobotConnection():
     def xmax(self,y):
       return round(math.sqrt(math.pow(532, 2) - math.pow(const.CONST.RobYMax / 2.0 - y, 2)) - 145, 1)
     
-    def robCanReachPoint(self, point):
-      if point == None:
+    def robCanReachPoint(self, koordinates):
+      if koordinates == None:
 	return False
       # Sofern sich das Ziel in der Mitte befindet, nehme die Maximalauslenkung der Mitte
       if abs(koordinates[1] - const.CONST.RobYMax / 2.0) < 1:
-	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMaxMitte or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
-	    return False
-	else:
-	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
-	    return False
+	if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMaxMitte or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
+	  return False
+      else:
+	if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
+	  return False
       return True  
         
 class Strategy(common.Component):
@@ -157,11 +156,9 @@ class Strategy(common.Component):
             startposition = bag.puck.position
         if direction == None:
             direction = bag.puck.direction
-        """
         if direction[0] == 0:
 	  #print("direction 0")
 	  return None
-	  """
         timeToCrossXLine = (xLine - startposition[0])/(direction[0] * bag.puck.velocity)
         yPosition = startposition[1] + timeToCrossXLine * direction[1] * bag.puck.velocity
         
@@ -227,22 +224,23 @@ class Strategy(common.Component):
     def attack2(self, bag):
 	#alte Roboterkoordinaten ins Bildsystem umrechnen
 	y = (self.oldRobotKoordinates[1] + const.CONST.durchmesserSchlaeger/2) / (const.CONST.tableYMax + const.CONST.durchmesserSchlaeger)
-	koordinates = self.CrossYLine(bag, y)	
+	# sollte der Puck sich dem Schlaeger in einem Winkel kleiner 18 Grad naehern,
+	# wird der schnittpunkt mit der x - Achse verwendet ansonsten der Schnittpunkt mit der y-Achse
+	if bag.puck.direction[0] < -0.95:
+	  koordinates = self.CrossXLine(bag, 0.18)
+	  # Wenn der Schlag zu schraeg wird, Angriff abbrechen
+	  if abs(koordinates[1] - y) > 0.2:
+	    return None
+	else:
+	  koordinates = self.CrossYLine(bag, y)	
 	robKoordinates = self.transformToRobotkoordinates(koordinates)
 	if not self.roboter.robCanReachPoint(robKoordinates):
-	  koordinates = self.CrossXLine(bag, 0.18)
-	  robKoordinates = self.transformToRobotkoordinates(koordinates)
-	if abs(self.calculateTimeToPoint(robKoordinates) - koordinates[2]) < 1.0/30:
+	  return None
+	if abs(self.calculateTimeToXPoint(robKoordinates[0]) - koordinates[2]) < 1.0/30:
 	  self.lastMove = self.ANGRIFF2
 	  #print(robKoordinates)
 	  return robKoordinates
 	return None
-    
-    def attack3(self,bag):
-      return NotImplementedError
-   
-    def attack4(self, bag):
-      return NotImplementedError
     
     def defend(self, bag):
 	koordinates = self.CrossXLine(bag, 0.0)
@@ -253,15 +251,21 @@ class Strategy(common.Component):
 	ymax = (const.CONST.RobYMax + Torgroesse) / 2.0
 	if robKoordinates[1] < ymin or robKoordinates[1] > ymax:
 	  return None
+	if abs(self.oldRobotKoordinates[1] - robKoordinates[1]) < const.CONST.minimumMovement:
+	  return None
 	self.lastMove = self.DEFEND
-	return robKoordinates
+	#return explizit 0, da CrossXLine die 0 im Bildkoordinatensystem verwendet, die eine andere 0 als im Roboterkoordinatensystem ist
+	return (0,robKoordinates[1])
 	
-	
+    def calculateTimeToXPoint(self, xValue):
+	deltaX = abs(self.oldRobotKoordinates[0] - xValue)
+	return (deltaX + 163.23) / 1145.2
+      
     def calculateTimeToPoint(self, koordinates):
 	#Berechnet die Zeit die der Roboter benoetigt um die uebergebenen Koordinaten in 2 Schritten entlang der Achsen zu erreichen
 	deltaX = abs(self.oldRobotKoordinates[0] - koordinates[0])
 	deltaY = abs(self.oldRobotKoordinates[1] - koordinates[1])
-	#ueberprüfen ob die delta groesser 0 sind, da sich der Roboter dann nicht in die se Richtung mehr bewegen muss
+	#ueberpruefen ob die delta groesser 0 sind, da sich der Roboter dann nicht in die se Richtung mehr bewegen muss
 	if deltaX >= 1:
 	  timeX = (deltaX + 163.23) / 1145.2
 	else:
@@ -273,58 +277,29 @@ class Strategy(common.Component):
 	return timeX + timeY
       
     def decideStrategy(self, bag):
+	if bag.puck.position == None or bag.puck.position == {} or bag.puck.direction == None or bag.puck.direction == {}:
+	  return None
 	if self.lastMove == self.ANGRIFF2 or self.lastMove == self.ANGRIFF4:
 	  return self.gohome()
 	if not bag.puck.position[0] < 0.5:
 	  if bag.puck.direction[0] < 0:
 	    return self.defend(bag)
 	  return self.gohome()
-	#herausfinden ob Puck pendelt
-	if abs(bag.puck.direction[0]) < 0.05:
-	  if not self.lastMove == self.ANGRIFF3:
-	    return self.attack3(bag)
-	  return self.attack4(bag)
+	# herausfinden ob Puck pendelt
+	# Puck bewegt sich in eiem 20 Grad Winkel entlang der Y-Achse
+	if abs(bag.puck.direction[0]) < 0.35:
+	  if not self.lastMove == self.GOHOME:
+	    return self.gohome()
+	  return self.attack2(bag)
 	puckDestination = self.CrossXLine(bag, 0.18)
 	puckDestinationRobot = self.transformToRobotkoordinates(puckDestination)
-	if self.lastMove == self.ANGRIFF1 and (abs(puckDestinationRobot[1] - self.oldRobotKoordinates[1]) < 50):
+	if self.lastMove == self.ANGRIFF1 and (abs(puckDestinationRobot[1] - self.oldRobotKoordinates[1]) < const.CONST.minimumMovement):
 	  return self.attack2(bag)
-	if self.calculateTimeToPoint(puckDestinationRobot) > puckDestination[3]:
+	if self.calculateTimeToPoint(puckDestinationRobot) > puckDestination[2]:
 	  return self.defend(bag)
 	return self.attack1(puckDestinationRobot)
 	
-	  
-      """
-    def decideStrategy(self, bag):
-	if bag.puck.position == {} or bag.puck.direction == {}:
-	  return self.NULL
 	
-	#Wenn die letzte Bewegung der Angriffsschlag war, bewege dich zurueck vors Tor
-	if self.lastMove == self.ANGRIFF2:
-	  return self.GOHOME #evtl. Abfragen ob Puck schon wieder zurueckkommt
-	
-	#Wenn sich der Puck vom Roboter fortbewegt, soll er entweder nichts tun oder sich vors tor bewegen
-	if bag.puck.position[0] < 0.2 and abs(bag.puck.direction[0]) < 0.01:
-	  return self.ANGRIFF2
-	
-	if bag.puck.direction[0] >= 0:
-	  if self.lastMove == self.ANGRIFF1:
-	    return self.GOHOME
-	  return self.NULL
-	
-	#Schnittpunkt einer Gerden etwa 20cm vorm Tor
-	puckDestination = self.CrossXLine(bag, 0.18)
-	puckDestinationRobot = self.transformToRobotkoordinates(puckDestination)
-	
-	#Wenn die letzte Bewegung, die Vorbereitung zum Angriff war und sich die berechneten Koordinaten weniger als 5cm (50mm) veraendert haben, greife an
-	if (self.lastMove == self.ANGRIFF1) and (abs(puckDestinationRobot[1] - self.oldRobotKoordinates[1]) < 50):
-	    return self.ANGRIFF2
-	  
-	#Wenn der Roboter den Puck in der Zeit erreichen kann bereite den Angriff vor
-	if self.calculateTimeToPoint(puckDestination) < puckDestination[2]:
-	  return self.ANGRIFF1
-	  
-	return self.DEFEND
-	 """
     def transformToRobotkoordinates(self,koordinates):
 	#Daten von Bild-Koordinatensystem ins Roboter-Koordinatensytem konvertieren
 	if koordinates == None:
