@@ -49,15 +49,9 @@ class RobotConnection():
     def SendKoordinatesToRoboter(self, koordinates):
 	if koordinates == None:
 	  return False
-	# Sofern sich das Ziel in der Mitte befindet, nehme die Maximalauslenkung der Mitte
-	if abs(koordinates[1] - const.CONST.RobYMax / 2.0) < 1:
-	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMaxMitte) or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
-	    print("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes")
-	    return False
-	else:
-	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax) or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
-	    print("!!!!!WARNING!!!!!! Koordinaten befinden sich ausserhalb des Spielfeldes")
-	    return False
+	if not self.robCanReachPoint(koordinates):
+	  print("!!!WARNING!!! Koordianten ausserhalb von Roboterreichweite.")
+	  return False
 	"""
 	connection = self.ConnectToSocket()
 	if connection == None: 
@@ -110,8 +104,17 @@ class RobotConnection():
     def xmax(self,y):
       return round(math.sqrt(math.pow(532, 2) - math.pow(const.CONST.RobYMax / 2.0 - y, 2)) - 145, 1)
     
-        
-        
+    def robCanReachPoint(self, point):
+      if point == None:
+	return False
+      # Sofern sich das Ziel in der Mitte befindet, nehme die Maximalauslenkung der Mitte
+      if abs(koordinates[1] - const.CONST.RobYMax / 2.0) < 1:
+	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMaxMitte or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
+	    return False
+	else:
+	  if koordinates[0] < 0 or koordinates[0] > const.CONST.RobXMax or koordinates[1] < 0 or koordinates[1] > const.CONST.RobYMax:
+	    return False
+      return True  
         
 class Strategy(common.Component):
   
@@ -122,6 +125,8 @@ class Strategy(common.Component):
     ANGRIFF1 = 2
     ANGRIFF2 = 3
     GOHOME = 4
+    ANGRIFF3 = 5
+    ANGRIFF4 = 6
     
     def __init__(self, eventhandler):
 	super(Strategy, self).__init__(eventhandler)
@@ -203,25 +208,7 @@ class Strategy(common.Component):
 	  return
 	if not self.roboter.canMove():
 	  return
-	strategy = self.decideStrategy(bag)
-	koordinates = None
-	#print(strategy)
-	if strategy == self.NULL:
-	  return
-	
-	if strategy == self.DEFEND:
-	  print("Defend")
-	  koordinates = self.defend(bag)
-	if strategy == self.ANGRIFF1:
-	  print("angriff1")
-	  koordinates = self.attack1(bag)
-	if strategy == self.ANGRIFF2:
-	  print("angriff2")
-	  koordinates = self.attack2(bag)
-	if strategy == self.GOHOME:
-	  print("go home")
-	  koordinates = const.CONST.homePosition
-	  self.lastMove = self.GOHOME
+	koordinates = self.decideStrategy(bag)
 	
 	
 	#sende Daten
@@ -229,27 +216,33 @@ class Strategy(common.Component):
 	  #self.writeProtokoll(bag, koordinates)
 	  self.oldRobotKoordinates = koordinates
 	  
-	  
-    def attack1(self, bag):
-	koordinates = self.CrossXLine(bag, 0.18)
-	robKoordinates = self.transformToRobotkoordinates(koordinates)
+    def gohome(self):
+	self.lastMove = self.GOHOME
+	return const.CONST.homePosition
+	
+    def attack1(self, robKoordinates):
 	self.lastMove = self.ANGRIFF1
 	return (0, robKoordinates[1])
     
     def attack2(self, bag):
 	#alte Roboterkoordinaten ins Bildsystem umrechnen
 	y = (self.oldRobotKoordinates[1] + const.CONST.durchmesserSchlaeger/2) / (const.CONST.tableYMax + const.CONST.durchmesserSchlaeger)
-	koordinates = self.CrossYLine(bag, y)
-	if koordinates == None:
-	  koordinates = self.CrossXLine(bag, 0.18)
-	#koordinates = self.CrossXLine(bag, 0.18)
+	koordinates = self.CrossYLine(bag, y)	
 	robKoordinates = self.transformToRobotkoordinates(koordinates)
+	if not self.roboter.robCanReachPoint(robKoordinates):
+	  koordinates = self.CrossXLine(bag, 0.18)
+	  robKoordinates = self.transformToRobotkoordinates(koordinates)
 	if abs(self.calculateTimeToPoint(robKoordinates) - koordinates[2]) < 1.0/30:
 	  self.lastMove = self.ANGRIFF2
 	  #print(robKoordinates)
 	  return robKoordinates
 	return None
     
+    def attack3(self,bag):
+      return NotImplementedError
+   
+    def attack4(self, bag):
+      return NotImplementedError
     
     def defend(self, bag):
 	koordinates = self.CrossXLine(bag, 0.0)
@@ -265,16 +258,45 @@ class Strategy(common.Component):
 	
 	
     def calculateTimeToPoint(self, koordinates):
-	deltaX = self.oldRobotKoordinates[0] - koordinates[0]
-	deltaY = self.oldRobotKoordinates[1] - koordinates[1]
-	timeX = (deltaX + 163.23) / 1145.2
-	timeY = (deltaY + 238.24) / 1579.13
+	#Berechnet die Zeit die der Roboter benoetigt um die uebergebenen Koordinaten in 2 Schritten entlang der Achsen zu erreichen
+	deltaX = abs(self.oldRobotKoordinates[0] - koordinates[0])
+	deltaY = abs(self.oldRobotKoordinates[1] - koordinates[1])
+	#ueberprüfen ob die delta groesser 0 sind, da sich der Roboter dann nicht in die se Richtung mehr bewegen muss
+	if deltaX >= 1:
+	  timeX = (deltaX + 163.23) / 1145.2
+	else:
+	  timeX = 0
+	if deltaY >= 1:
+	  timeY = (deltaY + 238.24) / 1579.13
+	else:
+	  timeY = 0
 	return timeX + timeY
       
     def decideStrategy(self, bag):
+	if self.lastMove == self.ANGRIFF2 or self.lastMove == self.ANGRIFF4:
+	  return self.gohome()
+	if not bag.puck.position[0] < 0.5:
+	  if bag.puck.direction[0] < 0:
+	    return self.defend(bag)
+	  return self.gohome()
+	#herausfinden ob Puck pendelt
+	if abs(bag.puck.direction[0]) < 0.05:
+	  if not self.lastMove == self.ANGRIFF3:
+	    return self.attack3(bag)
+	  return self.attack4(bag)
+	puckDestination = self.CrossXLine(bag, 0.18)
+	puckDestinationRobot = self.transformToRobotkoordinates(puckDestination)
+	if self.lastMove == self.ANGRIFF1 and (abs(puckDestinationRobot[1] - self.oldRobotKoordinates[1]) < 50):
+	  return self.attack2(bag)
+	if self.calculateTimeToPoint(puckDestinationRobot) > puckDestination[3]:
+	  return self.defend(bag)
+	return self.attack1(puckDestinationRobot)
+	
+	  
+      """
+    def decideStrategy(self, bag):
 	if bag.puck.position == {} or bag.puck.direction == {}:
 	  return self.NULL
-	#TODO einbauen wenn puck sich in y-Richtung vor Roboter bewegt
 	
 	#Wenn die letzte Bewegung der Angriffsschlag war, bewege dich zurueck vors Tor
 	if self.lastMove == self.ANGRIFF2:
@@ -302,10 +324,11 @@ class Strategy(common.Component):
 	  return self.ANGRIFF1
 	  
 	return self.DEFEND
-	 
+	 """
     def transformToRobotkoordinates(self,koordinates):
 	#Daten von Bild-Koordinatensystem ins Roboter-Koordinatensytem konvertieren
-	#TODO auf Richtigkeit pruefen
+	if koordinates == None:
+	  return None
 	xRob = (koordinates[0] * const.CONST.tableDepth) - const.CONST.durchmesserSchlaeger/2 + koordinates[0] * const.CONST.durchmesserSchlaeger
 	yRob = (koordinates[1] * const.CONST.tableWidth) - const.CONST.durchmesserSchlaeger/2 + koordinates[1] * const.CONST.durchmesserSchlaeger
 	return (xRob, yRob)
