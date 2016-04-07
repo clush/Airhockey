@@ -223,22 +223,23 @@ class Strategy(common.Component):
     
     def attack2(self, bag):
 	#alte Roboterkoordinaten ins Bildsystem umrechnen
-	y = (self.oldRobotKoordinates[1] + const.CONST.durchmesserSchlaeger/2) / (const.CONST.tableYMax + const.CONST.durchmesserSchlaeger)
+	y = (self.oldRobotKoordinates[1] + const.CONST.durchmesserSchlaeger / 2.0) / (const.CONST.tableWidth +  const.CONST.durchmesserSchlaeger)
 	# sollte der Puck sich dem Schlaeger in einem Winkel kleiner 18 Grad naehern,
 	# wird der schnittpunkt mit der x - Achse verwendet ansonsten der Schnittpunkt mit der y-Achse
 	if bag.puck.direction[0] < -0.95:
 	  koordinates = self.CrossXLine(bag, 0.18)
 	  # Wenn der Schlag zu schraeg wird, Angriff abbrechen
 	  if abs(koordinates[1] - y) > 0.2:
+	    print("Angriff 2 abgebrochen")
 	    return None
 	else:
 	  koordinates = self.CrossYLine(bag, y)	
 	robKoordinates = self.transformToRobotkoordinates(koordinates)
 	if not self.roboter.robCanReachPoint(robKoordinates):
+	  print("Angriff2: Punkt kann nicht erreicht werden " + str(robKoordinates) + " / " + str(koordinates))
 	  return None
 	if abs(self.calculateTimeToXPoint(robKoordinates[0]) - koordinates[2]) < 1.0/30:
 	  self.lastMove = self.ANGRIFF2
-	  #print(robKoordinates)
 	  return robKoordinates
 	return None
     
@@ -265,15 +266,8 @@ class Strategy(common.Component):
 	#Berechnet die Zeit die der Roboter benoetigt um die uebergebenen Koordinaten in 2 Schritten entlang der Achsen zu erreichen
 	deltaX = abs(self.oldRobotKoordinates[0] - koordinates[0])
 	deltaY = abs(self.oldRobotKoordinates[1] - koordinates[1])
-	#ueberpruefen ob die delta groesser 0 sind, da sich der Roboter dann nicht in die se Richtung mehr bewegen muss
-	if deltaX >= 1:
-	  timeX = (deltaX + 163.23) / 1145.2
-	else:
-	  timeX = 0
-	if deltaY >= 1:
-	  timeY = (deltaY + 238.24) / 1579.13
-	else:
-	  timeY = 0
+	timeX = (deltaX + 163.23) / 1145.2
+	timeY = (deltaY + 238.24) / 1579.13
 	return timeX + timeY
       
     def decideStrategy(self, bag):
@@ -304,8 +298,8 @@ class Strategy(common.Component):
 	#Daten von Bild-Koordinatensystem ins Roboter-Koordinatensytem konvertieren
 	if koordinates == None:
 	  return None
-	xRob = (koordinates[0] * const.CONST.tableDepth) - const.CONST.durchmesserSchlaeger/2 + koordinates[0] * const.CONST.durchmesserSchlaeger
-	yRob = (koordinates[1] * const.CONST.tableWidth) - const.CONST.durchmesserSchlaeger/2 + koordinates[1] * const.CONST.durchmesserSchlaeger
+	xRob = (koordinates[0] * const.CONST.tableDepth) - const.CONST.durchmesserSchlaeger / 2.0 + koordinates[0] * const.CONST.durchmesserSchlaeger
+	yRob = (koordinates[1] * const.CONST.tableWidth) - const.CONST.durchmesserSchlaeger / 2.0 + koordinates[1] * const.CONST.durchmesserSchlaeger
 	return (xRob, yRob)
 
     
@@ -322,5 +316,8 @@ class Strategy(common.Component):
       protokoll=open("protokoll.txt","a")
       protokoll.write("aktuelle Roboterposition: "+ str(self.oldRobotKoordinates) + "; neue Roboterposition: " + str(koordinates) + "; Puckposition: " + str(bag.puck.position) +  "; Puckrichtung: " + str(bag.puck.direction) +"\n")
       protokoll.close()
-	 #TODO Protokollfunktion niederschreiben der Koordinaten des Puktes, der Richtung, der position des Roboters und der berechneten Abfangposition
-	 #TODO Roboter nicht komplett bewegen sondern, in kleineren Schritten. erhoeht die Korrigierbarkeit
+      
+      
+      
+ #TODO Protokollfunktion niederschreiben der Koordinaten des Puktes, der Richtung, der position des Roboters und der berechneten Abfangposition
+ #TODO Roboter nicht komplett bewegen sondern, in kleineren Schritten. erhoeht die Korrigierbarkeit

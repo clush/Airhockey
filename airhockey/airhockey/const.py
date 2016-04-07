@@ -15,6 +15,7 @@ class CONST:
     durchmesserPuck = 63 # Radius des Puckes in mm
     durchmesserSchlaeger = 95 #Radius des Schlaeger in mm
     
+    # Ausmasse die der Roboter in seinem Koordinatensystem erreichen koennte
     tableXMax = tableDepth - durchmesserSchlaeger
     tableYMax = tableWidth - durchmesserSchlaeger 
     
