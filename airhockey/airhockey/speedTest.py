@@ -31,14 +31,15 @@ def printzeile():
  # return math.sqrt(math.pow(532, 2) - math.pow(const.CONST.RobYMax / 2.0 - y, 2)) - 145
 
 
-protokoll=open("speedtest-Mitte.csv","w")
+protokoll=open("speedtest.csv","w")
 protokoll.write("xStart;yStart;xEnde;yEnde;Zeit\n")
 #protokoll.close()
 
 roboter=Connection.RobotConnection()
 print("Server open")
-"""
-for y in range(0, 691, 30):
+messungen = [90, 180, 390, 510, 540, 630]
+
+for y in messungen:
   protokoll.write("Bewegung bei y=" + str(y) + "\n")
   for x in range(0, 270, 10):
     versuch(roboter, [0, y], [x, y])
@@ -46,11 +47,12 @@ for y in range(0, 691, 30):
     while not roboter.canMove():
       pass
   protokoll.write("\n\n")
+
 """
 for x in range(0, 386, 10):
   versuch(roboter, [0, 345], [x, 345])
   while not roboter.canMove():
       pass
-
+"""
 
 protokoll.close()
