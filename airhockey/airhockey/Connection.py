@@ -124,8 +124,6 @@ class Strategy(common.Component):
     ANGRIFF1 = 2
     ANGRIFF2 = 3
     GOHOME = 4
-    ANGRIFF3 = 5
-    ANGRIFF4 = 6
     
     def __init__(self, eventhandler):
 	super(Strategy, self).__init__(eventhandler)
@@ -218,6 +216,10 @@ class Strategy(common.Component):
 	return const.CONST.homePosition
 	
     def attack1(self, robKoordinates):
+	if robKoordinates[1] < const.CONST.durchmesserPuck:
+	  return None
+	if robKoordinates[1] > const.CONST.RobYMax - const.CONST.durchmesserPuck:
+	  return None
 	self.lastMove = self.ANGRIFF1
 	return (0, robKoordinates[1])
     
@@ -238,7 +240,7 @@ class Strategy(common.Component):
 	if not self.roboter.robCanReachPoint(robKoordinates):
 	  print("Angriff2: Punkt kann nicht erreicht werden " + str(robKoordinates) + " / " + str(koordinates))
 	  return None
-	if abs(self.calculateTimeToXPoint(robKoordinates[0]) - koordinates[2]) < 1.0/30:
+	if abs(self.calculateTimeToXPoint(robKoordinates) - koordinates[2]) < 1.0/30:
 	  self.lastMove = self.ANGRIFF2
 	  return robKoordinates
 	return None
@@ -258,22 +260,33 @@ class Strategy(common.Component):
 	#return explizit 0, da CrossXLine die 0 im Bildkoordinatensystem verwendet, die eine andere 0 als im Roboterkoordinatensystem ist
 	return (0,robKoordinates[1])
 	
-    def calculateTimeToXPoint(self, xValue):
-	deltaX = abs(self.oldRobotKoordinates[0] - xValue)
-	return (deltaX + 163.23) / 1145.2
+    def calculateTimeToXPoint(self, koordinates):
+	deltaX = abs(self.oldRobotKoordinates[0] - koordinates[0])
+	# Wenn sich die Bewegung in der Mitte statt findet soll eine quadratische Gleichung verwendet werden,
+	# da ab etwa 260(Maximale x-Auslenkung nomal) die Gerade nicht mehr linear annaehern laesst
+	if abs(koordinates[1] - const.CONST.RobYMax / 2.0) < 1:
+	  return (-1863 + math.sqrt(1863 * 1863 - 4 * -1284 * (-258.82 - deltaX))) / (2 * -1284)
+	anstieg, offset = self.GetSpeedParameter(koordinates[1])
+	return (deltaX + offset) / anstieg
       
     def calculateTimeToPoint(self, koordinates):
 	#Berechnet die Zeit die der Roboter benoetigt um die uebergebenen Koordinaten in 2 Schritten entlang der Achsen zu erreichen
 	deltaX = abs(self.oldRobotKoordinates[0] - koordinates[0])
 	deltaY = abs(self.oldRobotKoordinates[1] - koordinates[1])
-	timeX = (deltaX + 163.23) / 1145.2
-	timeY = (deltaY + 238.24) / 1579.13
+	anstieg, offset = self.GetSpeedParameter(koordinates[1])
+	timeX = (deltaX + offset) / anstieg
+	timeY = (deltaY + 238.24) / 1579.1
 	return timeX + timeY
+      
+    def GetSpeedParameter(self, yKoordinate):
+	anstieg = -0.0009418987 * yKoordinate * yKoordinate + 0.6422463442 * yKoordinate + 1081.1811123596
+	offset = -0.0002698637 * yKoordinate * yKoordinate + 0.1841655161 * yKoordinate + 143.5693805243
+	return (anstieg, offset)
       
     def decideStrategy(self, bag):
 	if bag.puck.position == None or bag.puck.position == {} or bag.puck.direction == None or bag.puck.direction == {}:
 	  return None
-	if self.lastMove == self.ANGRIFF2 or self.lastMove == self.ANGRIFF4:
+	if self.lastMove == self.ANGRIFF2:
 	  return self.gohome()
 	if not bag.puck.position[0] < 0.5:
 	  if bag.puck.direction[0] < 0:
