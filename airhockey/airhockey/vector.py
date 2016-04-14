@@ -118,7 +118,7 @@ def mirror_point_into_field(point):
     return point
    
 def mirror_point_at_border(point, bordervalue):
-    yPosition = point[1]
+    yPosition = point[1] 
     xPosition = point[0]
     #TODO Stosszahl einberechnen beim Bandenabprall
     if bordervalue == border.border.xBy0:

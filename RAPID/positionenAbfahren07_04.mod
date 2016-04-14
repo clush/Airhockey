@@ -9,12 +9,16 @@ VAR string partX;
 VAR string partY;
 VAR robtarget Target;
 VAR num count;
-VAR num x := 140;
-VAR num y := 400;
+VAR num x := 0;
+VAR num y := 345;
 VAR num z := 0;
 VAR num found;
+VAR num xMaxV;
 VAR bool okX;
 VAR bool okY;
+
+
+
      
 PROC main()
 
@@ -25,13 +29,15 @@ MoveL Target,v5000,fine,tool0\WObj:=Workobject_Table;
 !SocketBind server_socket, "192.168.28.121", 1025;
 !SocketListen server_socket;
 
+SocketCreate my_socket;
+SocketConnect my_socket,"192.168.28.222", 1025 \Time:=WAIT_MAX;
+
 
 WHILE (TRUE) DO
 
-SocketCreate my_socket;
-SocketConnect my_socket,"192.168.28.222", 1025 \Time:=WAIT_MAX;
+
 SocketReceive my_socket \Str:= receive_string \Time:=WAIT_MAX; 
-SocketClose my_socket;
+!SocketClose my_socket;
     
 !SocketAccept server_socket, client_socket \ClientAddress:=client_ip \Time:=WAIT_MAX;
 !Empfange Daten
@@ -56,7 +62,7 @@ okX := StrToVal(partX,x);
 okY := StrToVal(partY,y);
 
 !Überprüfung, ob Convertierung funktioniert hat
-IF NOT (okX OR okY) THEN
+IF NOT (okX AND okY) THEN
     ErrWrite \W, "Zeichenfolge konnte nicht in eine Zahl umgewandelt werden", "";
     GOTO abbrechen;
 ENDIF
@@ -65,8 +71,14 @@ TPWrite " " \Num:=x;
 TPWrite " " \Num:=y;
 
 !Überprüfung, ob Koordinaten außerhalb des Spielfeldes liegen
-IF (x<xMin) OR (x>xMax) OR (y<yMin) OR (y>yMax) THEN
-    ErrWrite \W, "Gesendete Koordinaten liegen außerhalb des Spielfeldes", "";
+IF abs(y-345)<1 THEN 
+    xMaxV:= xMaxMitte;
+ELSE
+    xMaxV:= xMax;
+ENDIF
+
+IF (x<xMin) OR (x>xMaxV) OR (y<yMin) OR (y>yMax) THEN 
+    ErrWrite \W, "Gesendete Koordinaten liegen außerhalb des Spielfeldes" , receive_string;
     GOTO abbrechen;
 ENDIF
 
@@ -76,6 +88,7 @@ MoveL Target,vMax,fine,tool0\WObj:=Workobject_Table;
 
 
 abbrechen:
+SocketSend my_socket \Str:="Ready";
 
 ENDWHILE
 

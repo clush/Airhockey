@@ -39,7 +39,7 @@ apt-get install -y libopencv-imgproc-dev
 ############eigene Ergänzungen#########
 
 
-# INSTALL THE LIBRARY (YOU CAN CHANGE '3.0.0' FOR THE LAST STABLE VERSION)
+# INSTALL THE LIBRARY (YOU CAN CHANGE '3.1.0' FOR THE LAST STABLE VERSION)
 
 apt-get install -y unzip wget
 wget https://github.com/Itseez/opencv/archive/3.1.0.zip
@@ -47,17 +47,7 @@ unzip 3.1.0.zip
 rm 3.1.0.zip
 mv opencv-3.1.0 OpenCV
 
-#Workaround für irgendwas
-#wenn der sagt hier failed irgendwas, bitte manuell machen: http://code.opencv.org/issues/2980#note-5
-# wget https://webp.googlecode.com/files/libwebp-0.3.1.tar.gz
-# tar xvzf libwebp-0.3.0.tar.gz
-# cd libwebp-0.3.0
-# ./configure
-# make
-# sudo make install
-# cp /usr/local/lib/libwebp.a OpenCV/3rdparty/lib/
-# cp -r /usr/local/include/webp/ OpenCV/3rdparty/include/
-#Workaround Ende
+
 
 cd OpenCV
 mkdir build
