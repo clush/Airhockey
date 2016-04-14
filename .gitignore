@@ -1,7 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.png
 # C extensions
 *.so
 
@@ -68,3 +67,5 @@ target/
 /airhockey/airhockey/.~lock.speedtest_Auswertung2.xlsx#
 /airhockey/airhockey/.~lock.speedtest_Auswertung1.xlsx#
 /airhockey/airhockey/.~lock.Auswertung_Zusammenfassung.xlsx#
+/documentation/output/
+/documentation/build/
