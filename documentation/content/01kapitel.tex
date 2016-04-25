@@ -1,31 +1,17 @@
 %!TEX root = ../dokumentation.tex
 
 \chapter{Einleitung}
+Diese Studienarbeit ist eine Fortsetzung mehrerer Studienarbeiten des vergangenen Jahres. Diese beiden Studienarbeiten bestanden darin einen Airhockey-Tisch zu bauen an denen ein ABB Roboter anschließend Airhockey spielen kann. Die Zweite Studienarbeit bestand darin diesem Roboter das Airhockeyspielen beizubringen. Wir führen somit die zweite Studenarbeit weiter. Unsere Vorgänger sind soweit gekommen, das sie die Bilderkennung soweit fertig hatten, dass der Puck auf dem Spielfeld mithilfe einer Kamera erkannt werden konnte. Zusätzlich konnte eine recht genaue Flugbahn des Puckes bereits berechnet werden. Diese Infors wurden alle auf einer grafischen Oberfäche anschaulich dargestellt. Die Studienarbeit ist dann daran hängen geblieben, dass der Roboter noch nicht zur Verfügung stand. An dieser Stelle setzen wir mit unserer Studienarbeit an.
 
-\section{Aufgabenstellung}
+\newpage
 
+\chapter{Aufgabenstellung}
+Das Ziel dieser Studienarbeit ist es einem Roboter von ABB das Airhockey spielen beizubringen. Da dies eine Fortsetzung einer früheren Studienabreit ist, waren einige Dinge schon fertig. Wir werden auf diese Dinge in unserer Studienarbeit nicht weiter eingehen, da sie in der Studienarbeit unserer Vorgänger schon ausreichend erklärt wurden. Die Arbeit besteht grundlegend aus zwei Teilen. Der eine Teil ist die Ansteurung des Roboters, das durch ein Programm auf dem Roboter realisiert wird. Der zweite Teil ist die Strategie des Roboters, die auf einem externen Rechner ausgearbeitet wird.
+Durch diese beiden physikalisch getrennten Programme ist eine Kommunikation zwischen beiden vonnöten. Dies war einer der beiden Punkte denen wir uns in der Studienarbeit gewidmet haben. Der zweite und wichtigste Aufgabenteil war der Entwurf einer Spielstrategie. 
 
-\section{Ablaufplan}
-Erste Erwähnung eines Akronyms wird als Fußnote angezeigt. Jede weitere wird
-nur verlinkt: \acf{AGPL}. \cite{fsf:2007}
+\newpage
 
-Verweise auf das Glossar: \gls{Glossareintrag}, \glspl{Glossareintrag}
+\chapter{Ablaufplanung}
+Unser erster Schritt bestand darin uns mit dem Projekt vertraut zu machen. Dies bestand darin uns mit ABB Robot Studio vertraut zu machen und den PC einzurichten auf dem die Bildanalyse und die Roboter-KI laufen soll. Dazu mussten auf dem PC einige Bibliotheken nachinstalliert werden, insbesondere Bibliotheken von OpenCV, die zur Bildanalyse benötigt werden. Anschließend wurde die Kommunikation zwischen PC und Roboter in Angriff genommen. Die Kommunikation findet mithilfe von Sockets statt. Nachdem die Kommunikation zwischen dem PC und dem Roboter stand, wurde eine erste simple Defensivestrategie ausgearbeitet. Sie hat bis zum ende des 5. Semesters erstmal funktioniert. Diese hat allerdings mehr schlecht als recht funktioniert. 
+Für das 6. Semester werden wir als erstes den kompletten Code von unseren Vorgängern refactorn und diesen übersichtlicher machen sowie mehr kommentieren um den Code für eventuelle zukünftige Generationen freundlicher zu gestalten. Sobald dies erledigt ist, wird die Kommunikation erweitert, da diese im Moment nur eine x-Koordinate sendet und der Roboter eine feste y-Koordinate verwendet. Da der Roboter und das Bilderkennungsprogramm leicht unterschiedliche Koordinatensysteme verwenden, muss dafür noch eine bessere Umrechnungsfunktion gefunden werden, bei der möglichst geringe Ungenauigkeiten entstehen. Danach kann man sich voll und ganz auf die Strategien des Roboters wenden. Dazu wird zunächst die Defensive Strategie überarbeitet. Sobald diese funktioniert, kann man an offensive und letztendlich ausbalancierte Strategien denken. Innerhalb des Codes befinden sich einige Konfigurationsvariablen. Bis zum ende des fünften Semesters konnte man diese nur im Code ändern. Diese sollten bis zum Ende in eine Konfigurationsdatei ausgelagert werden, sofern dies nicht schon beim refactorn geschehen ist.
 
-Nur erwähnte Literaturverweise werden auch im Literaturverzeichnis gedruckt:
-\cite{baumgartner:2002}, \cite{dreyfus:1980}
-
-Meine erste Fußnote\footnote{Ich bin eine Fußnote}
-
-\begin{wrapfigure}{r}{.4\textwidth}
-\centering
-\includegraphics[height=.35\textwidth]{logo.png}
-\vspace{-15pt}
-\caption{Das Logo der Musterfirma\footnotemark}
-\end{wrapfigure}
-
-%Quelle muss in Fußnote stehen (da sonst aufgrund eines Fehlers nicht kompiliert
-% wird)
-\footnotetext{aus \cite{mustermann:2012}}
-Looking for the one superhero comic you just have to read. Following the antics and adventures of May Mayday Parker, this Spider-book has everything you could want in a comic--action, laughs, mystery and someone in a Spidey suit. Collects Alias \#1-28, What If. Jessica Jones had Joined the Avengers. In her inaugural arc, Jessicas life immediately becomes expendable when she uncovers the potentially explosive secret of one heros true identity. In her inaugural arc, Jessicas life immediately becomes expendable when she uncovers the potentially explosive secret of one heros true identity.
-
-Once upon a time, Jessica Jones was a costumed super-hero, just not a very good one. First, a story where Wolverine and Hulk come together, and then Captain America and Cable meet up. In a city of Marvels, Jessica Jones never found her niche. The classic adventures of Spider-Man from the early days up until the 90s. Looking for the one superhero comic you just have to read. In her inaugural arc, Jessicas life immediately becomes expendable when she uncovers the potentially explosive secret of one heros true identity.
