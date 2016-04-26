@@ -4,18 +4,18 @@
 
 In diesem Kapitel werden zusammenfassend alle Schritte erklärt die nötig sind um das Projekt von Grund auf in den Stand zu bringen, wie es gegen Ende unserer Studienarbeit war.
 
-Sofern am Roboter und den beiden Rechnern nichts verändert wurde, können sie die ersten beiden Abschnitte dieses Kapitels überspringen und direkt ein neues Spiel starten (siehe Abschnitt ~\ref{starten}). 
+Sofern am Roboter und den beiden Rechnern nichts verändert wurde, können Sie die ersten beiden Abschnitte dieses Kapitels überspringen und direkt ein neues Spiel starten (siehe Abschnitt ~\ref{starten}). 
 
 \section{Einrichtung der Produktivumgebungen}
 
 Das Projekt besteht aus zwei Teilen. Zum einen Bilderkennung und -Verarbeitung, welche durch ein Python-Programm realisiert wird. Dafür benötigt man einen PC, auf dem einen Linux-Distribution installiert ist. Des weiteren aus einem RAPID- Programm zur Steuerung des ABB-Roboters. Zum einfachen starten und editieren dieses Programms auf dem Controller braucht man einen Windows-PC auf dem die Software RobotStudio installiert ist. 
 
-Alle nötigen Dateien finden sie im GitHub-Repositorie \href{https://github.com/clush/Airhockey/}{https://github.com/clush/Airhockey/}.  
+Alle nötigen Dateien finden Sie im GitHub-Repositorie \href{https://github.com/clush/Airhockey/}{https://github.com/clush/Airhockey/}.  
 
 \subsection{Produktivumgebung für Bilderkennung einrichten}
-Alle nötigen Dateien für die Bilderkennung befinden sich im Ordner \enquote{aihockey} in unserem GitHub-Repository. Um das Programm starten zu können, muss OpenCV und Python auf dem Rechner installiert sein. Für die Installation von OpenCV können sie das Shell-Script \enquote{install-opencv.sh} verwenden, welches ebenfalls in unserem GitHub-Repository zu finden ist. Dieses haben wir auf einem Debian-System getestet. 
+Alle nötigen Dateien für die Bilderkennung befinden sich im Ordner \enquote{aihockey} in unserem GitHub-Repository. Um das Programm starten zu können, muss OpenCV und Python auf dem Rechner installiert sein. Für die Installation von OpenCV können Sie das Shell-Script \enquote{install-opencv.sh} verwenden, welches ebenfalls in unserem GitHub-Repository zu finden ist. Dieses haben wir auf einem Debian-System getestet. 
 
-Sollte es wider erwarten zu Problemen kommen, finden sie in der Studienarbeit \textit{Roboter lernt Air-Hockey spielen} von Sebastian Bezold, Christian Füller und Fabian Nagel in Abschnitt 3.2 eine ausführlichere Beschreibung zur Einrichtung der Produktivumgebung für die Bilderkennung.
+Sollte es wider erwarten zu Problemen kommen, finden Sie in der Studienarbeit \textit{Roboter lernt Air-Hockey spielen} von Sebastian Bezold, Christian Füller und Fabian Nagel in Abschnitt 3.2 eine ausführlichere Beschreibung zur Einrichtung der Produktivumgebung für die Bilderkennung.
 
 \subsection{RAPID-Programm auf Controller des Roboters laden}
 
@@ -27,7 +27,7 @@ Sollte es wider erwarten zu Problemen kommen, finden sie in der Studienarbeit \t
 \label{controller1}
 \end{wrapfigure}
 
-Melden sie sich auf dem Windows-PC mit ihrem DHBW-Account an. Öffnen sie anschließend RobotStudio. Nun müssen sie zunächst unser RobotStudio-Projekt entpacken. Klicken sie dazu in der linken Menüleiste auf \enquote{Share} und dann auf \enquote{Unpack and Work}. Navigieren sie anschließend zum Projektordner und wählen die Datei \enquote{Airhockey2.0.rspag} aus. Legen sie nun einen Speicherort für die das Projekt aus und merken sich diesen, damit es zu einem späteren Zeitpunkt von dort öffnen können. Nach erfolgreichem Entpacken öffnet sich die Station automatisch. 
+Melden Sie sich auf dem Windows-PC mit ihrem DHBW-Account an. Öffnen Sie anschließend RobotStudio. Nun müssen Sie zunächst unser RobotStudio-Projekt entpacken. Klicken Sie dazu in der linken Menüleiste auf \enquote{Share} und dann auf \enquote{Unpack and Work}. Navigieren Sie anschließend zum Projektordner und wählen die Datei \enquote{Airhockey2.0.rspag} aus. Legen Sie nun einen Speicherort für die das Projekt aus und merken sich diesen, damit es zu einem späteren Zeitpunkt von dort öffnen können. Nach erfolgreichem Entpacken öffnet sich die Station automatisch. 
 
 \begin{wrapfigure}{l}{.4\textwidth}
 \centering
@@ -37,11 +37,11 @@ Melden sie sich auf dem Windows-PC mit ihrem DHBW-Account an. Öffnen sie anschl
 \label{controller2}
 \end{wrapfigure}
 
-Als nächstes müssen sie den Roboter einbinden. Stellen sie zunächst sicher, dass er eingeschaltet ist. Gehen sie dann unter den Reiter \enquote{Controller} und dann auf \enquote{Add Controller}. Der Roboter-Controller hat die IP-Adresse 192.168.28.121 und sollte ganz unten im Drop-Down-Menü zu finden sein (siehe Abb. ~\ref{controller1}). Oft muss man um ihn auswählen zu können, das Menü nochmal einklappen und dann erneut auf \enquote{Add Controller} klicken. 
+Als nächstes müssen Sie den Roboter einbinden. Stellen Sie zunächst sicher, dass er eingeschaltet ist. Gehen Sie dann unter den Reiter \enquote{Controller} und dann auf \enquote{Add Controller}. Der Roboter-Controller hat die IP-Adresse 192.168.28.121 und sollte ganz unten im Drop-Down-Menü zu finden sein (siehe Abb. ~\ref{controller1}). Oft muss man um ihn auswählen zu können, das Menü nochmal einklappen und dann erneut auf \enquote{Add Controller} klicken. 
 
-Nach erfolgreichem Einbinden können sie den Roboter in der linken Verzeichnisstruktur finden (vgl. Abb. ~\ref{controller2}). In seinem Unterverzeichnis RAPID finden sie alle Programme, die momentan auf ihm aufgespielt sind. Hier sollten sich nach diesem Schritt die Dateien \enquote{CalibData.mod} und \enquote{positionenAbfahren} befinden. Um diese von \enquote{Current Station} auf den Controller zu übertragen müssen sie eine Verbindung zwischen beiden anlegen. Dies können sie durch die Funktionalität \enquote{Create Relation}, welche sie unter der Registerkarte \enquote{Controller} ganz rechts finden.
+Nach erfolgreichem Einbinden können Sie den Roboter in der linken Verzeichnisstruktur finden (vgl. Abb. ~\ref{controller2}). In seinem Unterverzeichnis RAPID finden Sie alle Programme, die momentan auf ihm aufgespielt sind. Hier sollten sich nach diesem Schritt die Dateien \enquote{CalibData.mod} und \enquote{positionenAbfahren} befinden. Um diese von \enquote{Current Station} auf den Controller zu übertragen müssen Sie eine Verbindung zwischen beiden anlegen. Dies können Sie durch die Funktionalität \enquote{Create Relation}, welche Sie unter der Registerkarte \enquote{Controller} ganz rechts finden.
 
-Achten sie darauf, dass sie bei der Datenübertragung nur die beiden nötigen Dateien \enquote{positionenAbfahren} und \enquote{CalibData.mod} ausgewählt haben und nicht versehentlich System-Module überschreiben (siehe Abb. ~\ref{transfer}). Bevor sie die Dateien kopieren können, müssen sie Schreibzugriff auf den Controller anfordern. Im Automatik-Modus können sie dies direkt über RobotStudio erlauben. Ist er auf Handbetrieb eingestellt müssen sie dies zunächst auf dem FlexPendant bestätigen.
+Achten Sie darauf, dass Sie bei der Datenübertragung nur die beiden nötigen Dateien \enquote{positionenAbfahren} und \enquote{CalibData.mod} ausgewählt haben und nicht versehentlich System-Module überschreiben (siehe Abb. ~\ref{transfer}). Bevor Sie die Dateien kopieren können, müssen Sie Schreibzugriff auf den Controller anfordern. Im Automatik-Modus können Sie dies direkt über RobotStudio erlauben. Ist er auf Handbetrieb eingestellt müssen Sie dies zunächst auf dem FlexPendant bestätigen.
 
 \begin{figure}[htbp]
 \centering
@@ -111,8 +111,8 @@ Bei diesem Schritt muss man zunächst auf dem FlexPendant als Koordinatensystem 
 Mit Hilfe der notierten Koordinaten, kann in Robotstudio ein neues Workobjekt angelegt werden. Dazu muss auch hier zunächst sichergestellt werden, dass als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobjekt \enquote{wobj0} eingestellt ist. Zum erzeugen eines neuen Workobjekts klickt man unter dem Reiter \enquote{Home} auf \enquote{Other} und anschließend auf \enquote{Creat Workobjekt}. In der linken Leiste öffnet sich ein entsprechendes Konfigurationmenü. Hier muss man nun das Feld \enquote{Frame by points} ausklappen und den Radio-Button \enquote{Three-point} auswählen (siehe Abb. ~\ref{dreipunkte}). Nun können hier für die drei Punkte die notierten Koordinaten  in der vorgegebenen Reihenfolge eingegeben werden.  
 
 Die Definition diese Workobjekts findet man anschließend in der Datei \enquote{CalibData} der \enquote{Current-Station} im Verzeichnis \enquote{RAPID}. Um diese Datei zu aktualisieren, muss man zunächst eine Synchronisation mit der Station vornehmen. Dafür einfach im Reiter \enquote{RAPID} in der oberen Menüleiste auf \enquote{Sychronize} und dann auf \enquote{Synchronize to RAPID} klicken. 
-Übertragen sie anschließend die neuen Daten auf den Roboter. Dies können sie wieder über die \enquote{Relation} machen, oder wenn der Roboter sich im Automatik-Modus befindet auch durch Editieren der Datei \enquote{CalibData} auf dem Controller des Roboters. 
-Ersetzen sie dazu die alte Definition von \enquote{wobj\_Table} durch die soeben erstellte. 
+Übertragen Sie anschließend die neuen Daten auf den Roboter. Dies können Sie wieder über die \enquote{Relation} machen, oder wenn der Roboter sich im Automatik-Modus befindet auch durch Editieren der Datei \enquote{CalibData} auf dem Controller des Roboters. 
+Ersetzen Sie dazu die alte Definition von \enquote{wobj\_Table} durch die soeben erstellte. 
 
 \section{Ein Spiel starten}
 \label{starten}
@@ -121,24 +121,24 @@ In diesem Abschnitt wird Schritt für Schritt beschrieben, wie man ein Spiel sta
 \subsection{Roboter-Programm starten} 
 Zuerst muss das RAPID-Programm auf dem Roboter-Controller gestartet werden. Dazu müssen folgende sechs Schritte durchgeführt werden:  
 \begin{enumerate}
-\item Öffnen sie RobotStudio auf dem Windows-PC und öffnen sie die Datei \enquote{Airhockey2.0.rssln}. Sofern sie noch den selben Rechner verwenden finden Sie diese Datei auf Laufwerk C im Ordner \enquote{Airhockey2.0}. Andernfalls in dem Verzeichnis, indem Sie das Projekt entpackt haben. 
+\item Öffnen Sie RobotStudio auf dem Windows-PC und öffnen Sie die Datei \enquote{Airhockey2.0.rssln}. Sofern Sie noch den selben Rechner verwenden finden Sie diese Datei auf Laufwerk C im Ordner \enquote{Airhockey2.0}. Andernfalls in dem Verzeichnis, indem Sie das Projekt entpackt haben. 
 
-\item Stellen sie zunächst sicher, dass er eingeschaltet ist und auf Automatik-Betrieb eingestellt ist. Gehen sie dann in RobotStudio unter dem Reiter \enquote{Controller} auf \enquote{Add Controller}. Der Roboter-Controller hat die IP-Adresse 192.168.28.121 und sollte ganz unten im Drop-Down-Menü zu finden sein (siehe Abb. ~\ref{controller1}). Oft muss man um ihn auswählen zu können, das Menü nochmal einklappen und dann erneut auf \enquote{Add Controller} klicken.
+\item Stellen Sie zunächst sicher, dass er eingeschaltet ist und auf Automatik-Betrieb eingestellt ist. Gehen Sie dann in RobotStudio unter dem Reiter \enquote{Controller} auf \enquote{Add Controller}. Der Roboter-Controller hat die IP-Adresse 192.168.28.121 und sollte ganz unten im Drop-Down-Menü zu finden sein (siehe Abb. ~\ref{controller1}). Oft muss man um ihn auswählen zu können, das Menü nochmal einklappen und dann erneut auf \enquote{Add Controller} klicken.
 
-\item Wechseln sie in den Reiter \enquote{RAPID} und öffnen sie die Datei \enquote{positioinenAbfahren} im Verzeichnis \enquote{RAPID} aus dem Roboter-Controller (14M-63471(192.168.28.121))(siehe Abb. ~\ref{controller2}). Fordern sie nun Schreibzugriff auf den Roboter-Controller an, indem sie auf den Knopf \enquote{Request Write Acces} drücken. 
+\item Wechseln Sie in den Reiter \enquote{RAPID} und öffnen Sie die Datei \enquote{positioinenAbfahren} im Verzeichnis \enquote{RAPID} aus dem Roboter-Controller (14M-63471(192.168.28.121))(siehe Abb. ~\ref{controller2}). Fordern Sie nun Schreibzugriff auf den Roboter-Controller an, indem Sie auf den Knopf \enquote{Request Write Acces} drücken. 
 
-\item Starten sie die Motoren des Roboters durch drücken von Schalter 3 am Schaltschrank(siehe Abb. ~\ref{schaltschrank}).
+\item Starten Sie die Motoren des Roboters durch drücken von Schalter 3 am Schaltschrank(siehe Abb. ~\ref{schaltschrank}).
 
-\item Setzen sie als nächstes den Programm-Zeiger zurück. Klicken sie dazu auf \enquote{Program Pointer} und wählen sie dann \enquote{Set Program Pointer to Main in all tasks}. Diesen Schritt müssen auch vor jedem weiteren Start des Programmes durchführen, da zu Beginn immer erst eine Verbindung mit der Bilderkennung aufgebaut werden muss.
+\item Setzen Sie als nächstes den Programm-Zeiger zurück. Klicken Sie dazu auf \enquote{Program Pointer} und wählen Sie dann \enquote{Set Program Pointer to Main in all tasks}. Diesen Schritt müssen auch vor jedem weiteren Start des Programmes durchführen, da zu Beginn immer erst eine Verbindung mit der Bilderkennung aufgebaut werden muss.
 
-\item Als letztes betätigen sie in RobotStudio den Start-Knopf. Der Schläger wird dann sofort in die Mitte des Tores gefahren, bevor versucht wird eine Verbindung mit der Bilderkennung aufzubauen.    
+\item Als letztes betätigen Sie in RobotStudio den Start-Knopf. Der Schläger wird dann sofort in die Mitte des Tores gefahren, bevor versucht wird eine Verbindung mit der Bilderkennung aufzubauen.    
 \end{enumerate}
 
 \subsection{Bildverarbeitung starten}
 \begin{enumerate}
-\item Stellen sie zunächst sicher, dass die Kamera an den Linux-Rechner angeschlossen ist.
+\item Stellen Sie zunächst sicher, dass die Kamera an den Linux-Rechner angeschlossen ist.
 
-\item Öffnen sie das Terminal und navigieren sie ins Verzeichnis \enquote{Schreibtisch/Airhockey/airhockey}
+\item Öffnen Sie das Terminal und navigieren Sie ins Verzeichnis \enquote{Schreibtisch/Airhockey/airhockey}
 
 
 \begin{figure}[htbp]
@@ -148,15 +148,15 @@ Zuerst muss das RAPID-Programm auf dem Roboter-Controller gestartet werden. Dazu
 \label{spielfeld}
 \end{figure}
 
-\item Starten sie die Bilderkennung, indem sie hier das Skript \enquote{table\_setup.sh} ausführen. Dieses erwartet zwei Interger-Werte als Übergabeparameter. Zum einen den Kameraanschluss und zum anderen die Framerate, mit der die Kamera aufnehmen soll. Den Kameraanschluss findet man im Verzeichnis \enquote{/dev} heraus. Suchen sie hier nach Ordnern, die mit \enquote{video} beginnen. Ist nur eine Kamera angeschlossen, sollte ein Ordner \enquote{video0} existieren. Der erste Übergabewert wäre somit 0. Als Framerrate sollten 30 Bilder pro Sekunde genutzt werden. Der Befehl zum Starten des Skripts ergibt sich damit wie folgt:
+\item Starten Sie die Bilderkennung, indem Sie hier das Skript \enquote{table\_setup.sh} ausführen. Dieses erwartet zwei Interger-Werte als Übergabeparameter. Zum einen den Kameraanschluss und zum anderen die Framerate, mit der die Kamera aufnehmen soll. Den Kameraanschluss findet man im Verzeichnis \enquote{/dev} heraus. Suchen Sie hier nach Ordnern, die mit \enquote{video} beginnen. Ist nur eine Kamera angeschlossen, sollte ein Ordner \enquote{video0} existieren. Der erste Übergabewert wäre somit 0. Als Framerrate sollten 30 Bilder pro Sekunde genutzt werden. Der Befehl zum Starten des Skripts ergibt sich damit wie folgt:
 
 \begin{lstlisting}[caption=Terminal-Befahl zum starten der Bilderkennung, label=start, language=bash]
 sh table_setup 0 30
 \end{lstlisting} 
 
-\item Das Programm versucht nun zunächst eine Verbindung mit dem Roboter-Controller auf zu bauen. Erst wenn dies erfolgreich war, öffnet sich ein Fenster, in dem ein Standbild des Tisches zu sehen ist. Darin muss nun zunächst das Spielfeld eingezeichnet werden. Dazu müssen sie zunächst den die untere linke Ecke und anschließend die obere rechte Ecke des Spielfeldes mit einem Doppelklick markieren (siehe Abb. ~\ref{spielfeld}). Dabei ist sehr wichtig, dass die Punkte genau in dieser Reihenfolge markiert werden, da ansonsten die Bilderkennung ein falsches Koordinatensystem zur Berechnung verwendet.   
+\item Das Programm versucht nun zunächst eine Verbindung mit dem Roboter-Controller auf zu bauen. Erst wenn dies erfolgreich war, öffnet sich ein Fenster, in dem ein Standbild des Tisches zu sehen ist. Darin muss nun zunächst das Spielfeld eingezeichnet werden. Dazu müssen Sie zunächst den die untere linke Ecke und anschließend die obere rechte Ecke des Spielfeldes mit einem Doppelklick markieren (siehe Abb. ~\ref{spielfeld}). Dabei ist sehr wichtig, dass die Punkte genau in dieser Reihenfolge markiert werden, da ansonsten die Bilderkennung ein falsches Koordinatensystem zur Berechnung verwendet.   
 
-\item Haben sie alle vorherigen Schritte erfolgreich abgearbeitet, können sie nun Air-Hockey gegen den Roboter spielen. Wir wünschen ihnen viel Spaß dabei. Zum Beenden des Bilderkennung einfach in im Terminal \enquote{Strg + C} eingeben.   
+\item Haben Sie alle vorherigen Schritte erfolgreich abgearbeitet, können Sie nun Air-Hockey gegen den ABB-Roboter spielen. Wir wünschen Ihnen viel Spaß dabei. Zum Beenden des Bilderkennung einfach in im Terminal \enquote{Strg + C} eingeben.   
 
 \end{enumerate} 
 

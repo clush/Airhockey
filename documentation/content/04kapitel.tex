@@ -1,9 +1,36 @@
 %!TEX root = ../dokumentation.tex
 
 \chapter{Untersuchung der Bewegungen des Roboters}
-Um dem Roboter sinnvolle Steuerungsbefehle geben zu können, ist es nicht nur wichtig die Bewegung des Pucks richtig vorhersagen zu können. Vielmehr muss man vor allem um bei einen Angriffsschlag den Puck zu treffen auch wissen, wie der Schläger sich bewegt. Aus diesem Grund haben wir eine ausführliche Untersuchung der Roboterbewegung durchgeführt, welche in diesem Kapitel beschrieben wird.
+Um dem Roboter sinnvolle Steuerungsbefehle geben zu können, ist es nicht nur wichtig die Bewegung des Pucks richtig vorhersagen zu können. Vielmehr muss man, vor allem um bei einem Angriffsschlag den Puck zu treffen, auch wissen wie der Schläger sich bewegt. Aus diesem Grund haben wir eine ausführliche Untersuchung der Roboterbewegung durchgeführt, welche in diesem Kapitel beschrieben wird.
 
 \section{Versuchsdurchführung}
+Um die Bewegung des Roboters zu untersuchen haben wir das Python-Programm \enquote{SpeedTest.py} geschrieben, welches sich in unserem GitHub-Repository im Ordner \enquote{airhockey} befindet. Dieses besteht im wesentlichen aus der Funktion \enquote{versuch} (siehe Listing 
+
+\begin{lstlisting}[caption= Funktion zur Zeitmessung, label=speed1]
+
+def versuch(roboter, startpunkt, endpunkt):
+  print(endpunkt)
+  while not roboter.SendKoordinatesToRoboter(startpunkt):
+    pass
+  while not roboter.canMove():
+    pass
+  while not roboter.SendKoordinatesToRoboter(endpunkt):
+    pass  
+  start = time.time()
+  while not roboter.canMove():
+    pass
+  end =time.time()
+  
+
+  protokoll.write(str(startpunkt[0]) + ";" + str(startpunkt[1]) + ";" + str(endpunkt[0]) + ";" + str(endpunkt[1]) + ";" + str(end - start) + "\n")
+
+
+\end{lstlisting}  
+
+\begin{lstlisting}[caption=Python-Programm: Abfahren der Grundlinie, label=speed2]
+for y in range(0, 691, 10):
+  versuch(roboter, [0, 0], [0, y])
+\end{lstlisting} 
 
 \section{Versuchsauswertung}
 
