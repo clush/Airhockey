@@ -10,10 +10,9 @@ def versuch(roboter, startpunkt, endpunkt):
     pass
   while not roboter.canMove():
     pass
-  while not roboter.SendKoordinatesToRoboter(endpunkt):
-    pass
-  
   start = time.time()
+  while not roboter.SendKoordinatesToRoboter(endpunkt):
+    pass   
   while not roboter.canMove():
     pass
   end =time.time()

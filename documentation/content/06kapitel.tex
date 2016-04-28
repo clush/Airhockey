@@ -111,8 +111,11 @@ Bei diesem Schritt muss man zunächst auf dem FlexPendant als Koordinatensystem 
 Mit Hilfe der notierten Koordinaten, kann in Robotstudio ein neues Workobjekt angelegt werden. Dazu muss auch hier zunächst sichergestellt werden, dass als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobjekt \enquote{wobj0} eingestellt ist. Zum erzeugen eines neuen Workobjekts klickt man unter dem Reiter \enquote{Home} auf \enquote{Other} und anschließend auf \enquote{Creat Workobjekt}. In der linken Leiste öffnet sich ein entsprechendes Konfigurationmenü. Hier muss man nun das Feld \enquote{Frame by points} ausklappen und den Radio-Button \enquote{Three-point} auswählen (siehe Abb. ~\ref{dreipunkte}). Nun können hier für die drei Punkte die notierten Koordinaten  in der vorgegebenen Reihenfolge eingegeben werden.  
 
 Die Definition diese Workobjekts findet man anschließend in der Datei \enquote{CalibData} der \enquote{Current-Station} im Verzeichnis \enquote{RAPID}. Um diese Datei zu aktualisieren, muss man zunächst eine Synchronisation mit der Station vornehmen. Dafür einfach im Reiter \enquote{RAPID} in der oberen Menüleiste auf \enquote{Sychronize} und dann auf \enquote{Synchronize to RAPID} klicken. 
+
 Übertragen Sie anschließend die neuen Daten auf den Roboter. Dies können Sie wieder über die \enquote{Relation} machen, oder wenn der Roboter sich im Automatik-Modus befindet auch durch Editieren der Datei \enquote{CalibData} auf dem Controller des Roboters. 
 Ersetzen Sie dazu die alte Definition von \enquote{wobj\_Table} durch die soeben erstellte. 
+
+Wie weit sich der Roboter entlang der x- bzw. y- Achse bewegen kann, können Sie über die Variablen \enquote{xMax} bzw. \enquote{yMax} einstellen. Wie weit er sich in der Mitte (bei x = 345) nach vorne bewegen kann über die Variable \enquote{xMaxMitte}. So wie wir den Roboter konfiguriert hatten, ergab sich ein Koordinatensystem für den Roboter wie es in Abbildung ~\ref{koordintensystem} dargestellt ist. 
 
 \section{Ein Spiel starten}
 \label{starten}
