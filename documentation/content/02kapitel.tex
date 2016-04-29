@@ -1,10 +1,26 @@
 %!TEX root = ../dokumentation.tex
 
 \chapter{Robotersteuerung und -Programmierung}
+Bei dieser Studienarbeit wurde ein ABB-Industrieroboter vom Typ \enquote{IRB 140} eingesetzt. Dieser wird gesteuert über eine \enquote{IRC 5 Einzelschrank-Steuerung}. Die besteht aus folgenden Modulen: (\cite{irc5} S.7)
+
+\begin{itemize}
+\item Antriebsmodul, in dem sich das Antriebsmodul befindet.
+
+\item Steuerungsmodul, das den Computer, den Netzschalter, Kommunikationsschnittstellen und den FlexPendant-Anschluss enthält. Die Steuerung enthält auch die Systemsoftware (RobotWare-OS), welche alle grundlegenden Funktionen für Betrieb und Programmierung umfasst.
+\end{itemize}
+
+Sämtliche Operationen und Programmierungen können mithilfe des portablen FlexPendant und über RobotStudio Online ausgeführt werden. 
+
+RobotStudio ist eine Software von ABB, die dafür gedacht ist ganze Arbeitsstationen von Industrierobotern virtuell zu erstellen, um daran dann Programmen für diese Roboter entwickeln und simulieren zu können, bevor sie auf den Roboter aufgespielt werden. Die Funktionalitäten dieser Software sind sehr umfangreich und deren Beschreibung würde den Rahmen dieser Studienarbeit bei weitem sprengen. Alle Funktionalitäten, die wir genutzt haben und die man benötigt um das Projekt fortzuführen, werden in Kapitel ~\ref{manual} beschrieben. 
+
+Möchte man sich in die Benutzung dieser Software einarbeiten, findet man auf der Seite \href{http://new.abb.com/products/robotics/robotstudio/how-to-use-it/getting-started}{http://new.abb.com/products/robotics/robotstudio/how-to-use-it/getting-started} gut verständliche Tutorials für Einsteiger. Weiterführende Tutorials findet man auf der Seite \href{http://new.abb.com/products/robotics/robotstudio/tutorials}{http://new.abb.com/products/robotics/robotstudio/tutorials}.
+
+Wie man den Roboter über das FlexPendant steuern kann, wird in Abschnitt \ref{flexsection} beschrieben.
+
+Zur Programmierung steht die Hochsprache RAPID zur Verfügung, die speziell für die Steuerung von Industrierobotern von ABB entwickelt wurde. Die Datentypen und Funktionen, die nötig sind um damit eine Bewegungen des Roboterarms zu realisieren, sind in Abschnitt ~\ref{rapidsection} beschrieben.
 
 \section{Robotersteuerung mit dem FlexPendant}
-
-
+\label{flexsection}
 \begin{wrapfigure}{l}{.4\textwidth}
 \centering
 \includegraphics[height=.45\textwidth]{schaltschrank.PNG}
@@ -13,37 +29,97 @@
 \label{schaltschrank}
 \end{wrapfigure}
 
+Um den Roboter über das FlexPendant bedienen zu können, muss man zunächst den Betriebsartenwahlschalter (Schalter 4 in Abb. ~\ref{schaltschrank}) auf Handbetrieb stellen. Dafür benötigt man den Schlüssel mit der Aufschrift \enquote{Schaltschrank Roboter 1}. Für den Handbetrieb gibt es zwei Modi: Schlüssel auf die rechte Position (\enquote{Handbetrieb 100\%}) bedeutet der Roboter bewegt sich mit voller Geschwindigkeit. Schlüssel in mittlerer Position bedeutet, dass sich der Roboter mit einer reduzierten Geschwindigkeit von maximal 250 mm/s fortbewegt.
+
+Über das FlexPendant kann der Roboter dann entweder über den Joystick (siehe Schalter A in Abb. ~\ref{flexpendant}) ferngesteuert werden, oder es können Programme ausgeführt werden, die sich auf dem Controller befinden. Dabei muss man jedoch beachten, dass immer der sogenannten \enquote{Totmannschalter} betätigt wird, welcher sich seitlich rechts am FlexPendant befindet. Dieser darf nicht zu schwach und nicht zu stark gedrückt werden und soll damit gewährleisten, dass bei einem Unfall der Roboter sofort stehen bleibt. Ob er richtig betätigt wurde erkennt man, wenn Schalter 3 am Schaltschrank (siehe Abb. ~\ref{schaltschrank}) durchgängig leuchtet. 
+
 \subsection{Fernsteuerung des Roboters}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=10cm]{Flexpendant.png}
+\caption{FlexPendant} 
+\label{flexpendant}
+\end{figure}
+
+Möchte man den Roboter über den Joystick fernsteuern, so muss man zunächst in der oberen linken Ecke des Touchscreens auf das ABB-Logo klicken und anschließend auf \enquote{Bewegen}. Der Roboterarm kann auf zwei verschieden Arten bewegt werden:
+
+\begin{enumerate}
+\item Möchte man das Werkzeug linear entlang der drei Raumachsen bewegen, so muss man Knopf B auf dem FlexPendant (siehe Abb. ~\ref{flexpendant}) betätigen. Es werden dabei die entsprechenden kartesischen Koordinaten angezeigt, je nachdem welches Werkobjekt man auswählt hat. Diese Positionsangaben beziehen sich auf die Spitze des angegebenen Werkzeugs. Ist dies \enquote{tool0} so bezieht sich diese Angabe auf den Mittelpunkt des Werkzeughalters. Zusätzlich wird auch die Orientierung des Werkzeughalters (als Quaternion ausgedrückt) angezeigt. 
+
+\item Es ist auch möglich jede des sechs Achsen einzeln anzusteuern. Um die ersten drei Achsen anzusteuern muss man Knopf C auf dem FlexPendant (siehe Abb. ~\ref{flexpendant}) betätigen. Möchte man die Achsen vier bis sechs bewegen, einfach Knopf C erneut betätigen. 
+\end{enumerate}
 
 \subsection{Programm starten}
 
-\section{Einführung in RobotStudio}
-
-\subsection{Neues Projekt anlegen}
-\subsection{Roboter bewegen}
-\subsection{Objekte anlegen}
-\subsection{Workobjekt anlegen}
-\subsection{Datentransfer zum Controller des Roboters}
+Möchte man über das FlexPendant ein RAPID-Programm auf dem Controller starten, so muss man zunächst in der oberen linken Ecke des Touchscreens auf das ABB-Logo klicken und anschließend auf \enquote{Programm Editor}. Hier kann man nun neue Programme schreiben oder bereits vorhandene editieren. Möchte man ein Programm starten, muss man in der unteren Leiste auf den Touchscreen auf \enquote{Testen} klicken. Nun kann man noch den Programmzähler an die gewünscht Stelle setzen: An den Anfang des Programms mit \enquote{PZ --> main}, oder zu einem Unterprogramm \enquote{PZ --> Routine ...}, oder an die Stelle an der sich der Cursor gerade befindet \enquote{PZ --> Cursor}. Zum Starten dann auf \enquote{Play} drücken (siehe Abb. ~\ref{flexpendant} Bereich D). Mit den Pfeiltasten in Bereich D kann das Programm auch schrittweise vorwärts bzw. rückwärts ablaufen lassen.
 
 \section{Einführung in RAPID}
+\label{rapidsection}
 
-\subsection{Robtarget}
+RAPID ist eine Programmiersprache, die von ABB eigens für die Programmierung von Industrierobotern entwickelt wurde. Dabei handelt es sich um eine höhere Programmiersprache. So umfasst den Großteil der Funktionalitäten anderer höherer Programmiersprachen (bedingt Anweisungen, verschieden Schleifen, so wie zahlreiche Funktionen und Datentypen). Des weiteren enthält RAPID jedoch Instruktionen zum Bewegen des Roboters.
+
+In diesem Abschnitt werden nur die wichtigsten Datentypen und Funktionen beschreiben, die benötigt werden um den Roboterarm bewegen zu können. 
+
+Möchte man sich mit dieser Programmiersprache vertraut machen, sollte man sich zunächst Dokument \cite{rapid1} anschauen. Eine vollständig Auflistung und Beschreibung aller Funktion, Instruktionen und Datentypen findet man im Referenzhandbuch \cite{rapid2}.
+
+\subsection{Positionen angeben}
+Zur Definition von Positionsdaten gibt es in RAPID den Datentyp \enquote{robtarget}. Dieser Datentyp ist ein Array aus vier Komponenten:
+\begin{enumerate}
+\item Translation:
+
+Ein dreistelliges Tupel, mit dem die Postion (x,y,und z) des Werkzeugarbeitspunkts in Millimeter angegeben wird.
+\item Rotation:
+
+Ein vierstelliges Tupel mit dem die Orientierung des Werkzeugs als Quaternion\footnote{Quaternionen sind eine Erweiterung der reellen Zahlen auf vier Dimensionen ähnlich den komplexen Zahlen. besitzen\.  Sie  sind  sehr  vielfältig  einsetzbar, beispielsweise könne sie auch zur Beschreibung von Orientierungen im Raum genutzt werden. \cite{quaternion}} angegeben wird.
+
+\item Roboter Konfiguration:
+
+Ein vierstelliges Tupel mit dem die Achsenkonfiguration des Roboters (cf1, cf4, cf6 und cfx) angegeben wird. Diese wird als Viertelumdrehung von Achse 1 (cf1), Achse 4 (cf4), Achse 6 (cf6) definiert. Die erste positive Viertelumdrehung (0$ ^\circ $ - 90$ ^\circ $) der drei Achsen wird dabei zum Beispiel mit 0 definiert. Mit cfx wird eine der acht möglichen Roboterkonfigurationen gewählt, die von 0 bis 7 nummeriert sind. Diese legen fest, wie die Roboterposition in Relation zu den drei Singularitäten stehen. Abbildung ~\ref{achsenkonfi} zeigt an zwei Beispielen, wie sich unterschiedliche Werte auswirken können.  
+\item Externe Achsen:
+
+Es ist möglich bis zu sechs weiter externe Achsen zu berücksichtigen. Hat meine keine externen Achsen muss man hier für alle sechs Werte \enquote{9E9} einsetzen. 
+\end{enumerate} 
+
+Dabei ist zu beachten, dass die Translations- und Rotations-Koordinaten sich immer auf das aktuelle Objekt-Koordinatensystem beziehen. Ist kein Werkobjekt angegeben, ist dies das Weltkoordinatensystem. 
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=12cm]{achsenkonfi.png}
+\caption{Achsenkonfigurationen für cfx = 0 und cfx =5 (\cite{rapid2 S. 1160ff})} 
+\label{achsenkonfi}
+\end{figure}
+
+Die Definition einer Positions-Variablen könnte damit beispielsweise lauten:
+
+\begin{lstlisting}[caption=Beispiel für die Definition einer Position, label=robtarget, language=bash]
+CONST robtarget Target_1:=[[453,26,610],[1,0,0,0],[-1,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]];
+\end{lstlisting} 
+
 \subsection{Pfade abfahren}
-%title wird unter dem Bsp. abgedruckt
-%caption wird im Verzeichnis abgedruckt
-%label wird zum referenzieren benutzt, muss einzigartig sein.
 
+Zum Bewegen des Roboters bietet die Programmiersprache RAPID zahlreiche Möglichkeiten. So kann man beispielsweise mit MoveAbsJ-Instruktion jede Achse einzeln ansteuern, indem man dem Roboter eine absolte Achsenposition übergibt. Zur Realisierung einer Kreisbewegung kann MoveC verwendet werden. MoveJ wird verwendet, um den Roboter rasch von einem Punkt an einen anderen zu bewegen, wenn diese Bewegung nicht geradlinig sein muss. In diesem Projekt sollte dies aber der Fall sein. Zur Ansteuerung des Roboters wurde deshalb ausschließlich die Instruktion MoveL genutzt, mit der sich lineare Bewegungen realisieren lassen. 
 
-\section{lorem ipsum}
-Looking for the one superhero comic you just have to read. Following the antics and adventures of May Mayday Parker, this Spider-book has everything you could want in a comic--action, laughs, mystery and someone in a Spidey suit. Collects Alias \#1-28, What If. Jessica Jones had Joined the Avengers. In her inaugural arc, Jessicas life immediately becomes expendable when she uncovers the potentially explosive secret of one heros true identity. 
+Die Instruktion MoveL erwartet mindestens vier Pflicht-Übergabeparameter, außerdem können ihr noch acht weitere optionale Parameter übergeben werden. Im folgenden werden die vier Pflichtkomponenten und die beiden wichtigsten optionalen Komponenten beschrieben.
 
-Once upon a time, Jessica Jones was a costumed super-hero, just not a very good one. First, a story where Wolverine and Hulk come together, and then Captain America and Cable meet up. In a city of Marvels, Jessica Jones never found her niche. The classic adventures of Spider-Man from the early days up until the 90s. Looking for the one superhero comic you just have to read.
+%rapid1 S.25 und rapid2 S.280 
+\begin{enumerate}
+\item Zielpunkt:
 
-Meet all of Spideys deadly enemies, from the Green Goblin and Doctor Octopus to Venom and Carnage, plus see Peter Parker fall in love, face tragedy and triumph, and learn that with great power comes great responsibility. In a city of Marvels, Jessica Jones never found her niche. Bitten by a radioactive spider, high school student Peter Parker gained the speed, strength and powers of a spider. Looking for the one superhero comic you just have to read. What do you get when you ask the question, What if Spider-Man had a daughter.
+\item Geschwindigkeit:
 
-The classic adventures of Spider-Man from the early days up until the 90s. Amazing Spider-Man is the cornerstone of the Marvel Universe. But will each partner’s combined strength be enough. Adopting the name Spider-Man, Peter hoped to start a career using his new abilities. Youve found it.
+\item Zone:
 
-\section{Verweis auf Code}
+\item Werkzeug:
 
+\item Werkobjekt:
 
-Zweite Erwähnung einer Abkürzung \ac{AGPL} (Erlärung wird nicht mehr angezeigt)
+\item Zeit:
+
+\end{enumerate}
+
+Beispielaufruf
+
+\begin{lstlisting}[caption=Beispielaufruf der MoveL-Instruktion, label=movel, language=bash]
+MoveL Target_1,v500,fine,tool0 \WObj:=Workobject_Table;
+\end{lstlisting}
