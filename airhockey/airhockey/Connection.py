@@ -240,7 +240,7 @@ class Strategy(common.Component):
 	if not self.roboter.robCanReachPoint(robKoordinates):
 	  print("Angriff2: Punkt kann nicht erreicht werden " + str(robKoordinates) + " / " + str(koordinates))
 	  return None
-	if abs(self.calculateTimeToXPoint(robKoordinates) - koordinates[2]) < 1.0/30:
+	if abs(self.calculateTimeToXPoint(robKoordinates) - koordinates[2]) < 1.0 / const.CONST.FPS:
 	  self.lastMove = self.ANGRIFF2
 	  return robKoordinates
 	return None
@@ -249,9 +249,8 @@ class Strategy(common.Component):
 	koordinates = self.CrossXLine(bag, 0.0)
 	robKoordinates = self.transformToRobotkoordinates(koordinates)
 	#Position auf unmittelbar vors Tor beschraenken
-	Torgroesse = 200
-	ymin = (const.CONST.RobYMax - Torgroesse) / 2.0
-	ymax = (const.CONST.RobYMax + Torgroesse) / 2.0
+	ymin = (const.CONST.RobYMax - const.CONST.Torgroesse) / 2.0
+	ymax = (const.CONST.RobYMax + const.CONST.Torgroesse) / 2.0
 	if robKoordinates[1] < ymin or robKoordinates[1] > ymax:
 	  return None
 	if abs(self.oldRobotKoordinates[1] - robKoordinates[1]) < const.CONST.minimumMovement:

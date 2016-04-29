@@ -24,7 +24,9 @@ class CONST:
     # Heimatposition des Roboters im Roboter-Koordinatensystem
     homePosition = [0, 345]
     
-    
+    Torgroesse = 200
+	
+    FPS = 30
     
     
     # IP des Roboters
