@@ -212,6 +212,8 @@ class Strategy(common.Component):
 	  self.oldRobotKoordinates = koordinates
 	  
     def gohome(self):
+	if self.lastMove == self.GOHOME:
+		return None
 	self.lastMove = self.GOHOME
 	return const.CONST.homePosition
 	
@@ -249,9 +251,9 @@ class Strategy(common.Component):
 	koordinates = self.CrossXLine(bag, 0.0)
 	robKoordinates = self.transformToRobotkoordinates(koordinates)
 	#Position auf unmittelbar vors Tor beschraenken
-	ymin = (const.CONST.RobYMax - const.CONST.Torgroesse) / 2.0
-	ymax = (const.CONST.RobYMax + const.CONST.Torgroesse) / 2.0
-	if robKoordinates[1] < ymin or robKoordinates[1] > ymax:
+	yMin = (const.CONST.RobYMax - const.CONST.Torgroesse) / 2.0
+	yMax = (const.CONST.RobYMax + const.CONST.Torgroesse) / 2.0
+	if robKoordinates[1] < yMin or robKoordinates[1] > yMax:
 	  return None
 	if abs(self.oldRobotKoordinates[1] - robKoordinates[1]) < const.CONST.minimumMovement:
 	  return None
