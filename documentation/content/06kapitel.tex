@@ -9,14 +9,14 @@ Sofern am Roboter und den beiden Rechnern nichts verändert wurde, können Sie d
 
 \section{Einrichtung der Produktivumgebungen}
 
-Das Projekt besteht aus zwei Teilen. Zum einen Bilderkennung und -Verarbeitung, welche durch ein Python-Programm realisiert wird. Dafür benötigt man einen PC, auf dem einen Linux-Distribution installiert ist. Des weiteren aus einem RAPID- Programm zur Steuerung des ABB-Roboters. Zum einfachen starten und editieren dieses Programms auf dem Controller braucht man einen Windows-PC auf dem die Software RobotStudio installiert ist. 
+Das Projekt besteht aus zwei Teilen. Zum einen Bilderkennung und -verarbeitung, welche durch ein Python-Programm realisiert wird. Dafür benötigt man einen PC, auf dem einen Linux-Distribution installiert ist. Des weiteren aus einem RAPID- Programm zur Steuerung des ABB-Roboters. Zum einfachen Starten und Editieren dieses Programms auf dem Controller braucht man einen Windows-PC auf dem die Software RobotStudio installiert ist. 
 
 Alle nötigen Dateien finden Sie im GitHub-Repositorie \href{https://github.com/clush/Airhockey/}{https://github.com/clush/Airhockey/}.  
 
 \subsection{Produktivumgebung für Bilderkennung einrichten}
 Alle nötigen Dateien für die Bilderkennung befinden sich im Ordner \enquote{aihockey} in unserem GitHub-Repository. Um das Programm starten zu können, muss OpenCV und Python auf dem Rechner installiert sein. Für die Installation von OpenCV können Sie das Shell-Script \enquote{install-opencv.sh} verwenden, welches ebenfalls in unserem GitHub-Repository zu finden ist. Dieses haben wir auf einem Debian-System getestet. 
 
-Sollte es wider erwarten zu Problemen kommen, finden Sie in der Studienarbeit \textit{Roboter lernt Air-Hockey spielen} von Sebastian Bezold, Christian Füller und Fabian Nagel in Abschnitt 3.2 eine ausführlichere Beschreibung zur Einrichtung der Produktivumgebung für die Bilderkennung.
+Sollte es wider erwarten zu Problemen kommen, finden Sie in der Studienarbeit \enquote{\textit{Roboter lernt Air-Hockey spielen}} von Sebastian Bezold, Christian Füller und Fabian Nagel in Abschnitt 3.2 eine ausführlichere Beschreibung zur Einrichtung der Produktivumgebung für die Bilderkennung.
 
 \subsection{RAPID-Programm auf Controller des Roboters laden}
 
@@ -53,7 +53,7 @@ Achten Sie darauf, dass Sie bei der Datenübertragung nur die beiden nötigen Da
    
 
 \section{Kalibrierung des Roboters}
-Wurde der Roboter längere Zeit nicht mehr benutzt, sollte vor der Benutzung getestet werden, ob der Roboter noch richtig kalibriert ist. Zu diesem Zweck gibt es die Routine \enquote{Kalibrierungstest}. Wird diese ausgeführt, werden mit langsamer Geschwindigkeit die vier Eckpunkte des Bereiches abgefahren in dem er sich bewegen kann, wobei sich Schlägerunterkante 30 mm über der Tischplatte befindet (siehe Listing ~\ref{kali}). Dabei sollte zum einen überprüft werden, ob die Schlägerunterkante überall 3 cm über dem Tisch ist. Dazu das Programm stoppen und an verschiedenen Stellen nachmessen. Außerdem sollte der Schläger genau in die beiden Ecken des Spielfeldes fahren und sich parallel zu den Banden bewegen. Sollte dies nicht der Fall sein, oder man möchte gar einen anderen Schläger verwenden, muss eine Neukalibrierung vorgenommen werden. Dazu müssen die folgenden drei Schritte durchgeführt werden.
+Wurde der Roboter längere Zeit nicht mehr benutzt, sollte vor der Benutzung getestet werden, ob der Roboter noch richtig kalibriert ist. Zu diesem Zweck gibt es die Routine \enquote{Kalibrierungstest}. Wird diese ausgeführt, werden mit langsamer Geschwindigkeit die vier Eckpunkte des Bereiches abgefahren in dem er sich bewegen kann, wobei sich Schlägerunterkante 30 mm über der Tischplatte befindet (siehe Listing ~\ref{kali}). Dabei sollte zum einen überprüft werden, ob die Schlägerunterkante überall 3 cm über dem Tisch ist. Dazu das Programm stoppen und an verschiedenen Stellen nachmessen. Außerdem sollte der Schläger genau in die beiden Ecken des Spielfeldes fahren und sich parallel zu den Banden bewegen. Sollte dies nicht der Fall sein, oder man möchte gar einen anderen Schläger verwenden, muss eine Neukalibrierung vorgenommen werden. Dazu müssen drei Schritte durchgeführt werden, die in den folgenden Abschnitten beschreiben werden.
 
 \begin{lstlisting}[caption=RAPID-Routine: Kalibrierungstest, label=kali]
 !Definitionen der Targets aus der Datei CalibData
@@ -75,7 +75,7 @@ ENDPROC
 \end{lstlisting}
 
 \subsection{Schläger montieren}
-Wurde der Schläger demontiert oder möchte man einen neuen Schläger montieren, so muss man den Roboterarm zunächst auf die vordefinierte Home-Position fahren. In dieser Position kann man den Schläger bequem ab- und anschrauben. Viel wichtiger ist jedoch, dass an dieser Position die Orientierung des Werkzeughalters (als Quaternion ausgedrückt) und die Achsenkonfiguration genau die gleichen sind wie bei den Positionsangaben, die dem Roboter später übergeben werden. Man kann den Roboter auf unterschiedliche Arten auf diese Position bringen. Zum einen durch ausführen der Routine \enquote{Jump-Home} in RobotStudio (Automatik-Modus) oder über das FlexPendant (Handbetrieb) (siehe Listing ~\ref{home}). Über das FlexPendant kann die Position (\enquote{Target\_Home}) auch direkt angefahren werden, wobei man dabei darauf achten muss, dass als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobjekt \enquote{wobj0} eingestellt ist. Bei der Montage des Schlägers muss man anschließend darauf achten, dass der Schläger möglichst parallel zur Roboterachse nach vorne zeigt. 
+Wurde der Schläger demontiert oder möchte man einen neuen Schläger montieren, so muss man den Roboterarm zunächst auf die vordefinierte Home-Position fahren. In dieser Position kann man den Schläger bequem ab- und anschrauben. Viel wichtiger ist jedoch, dass an dieser Position die Orientierung des Werkzeughalters (als Quaternion ausgedrückt) und die Achsenkonfiguration genau die gleichen sind wie bei den Positionsangaben, die dem Roboter später übergeben werden. Man kann den Roboter auf unterschiedliche Arten auf diese Position bringen. Zum einen durch ausführen der Routine \enquote{Jump-Home} in RobotStudio (Automatik-Modus) oder über das FlexPendant (Handbetrieb) (siehe Listing ~\ref{home}). Über das FlexPendant kann die Position (\enquote{Target\_Home}) auch direkt angefahren werden, wobei man dabei darauf achten muss, dass als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobject \enquote{wobj0} eingestellt ist. Bei der Montage des Schlägers muss man anschließend darauf achten, dass der Schläger möglichst parallel zur Roboterachse nach vorne zeigt. 
 
 \begin{lstlisting}[caption=RAPID-Routine: Jump-Home, label=home]
 !Definitionen der Home-Position aus der Datei CalibData
@@ -90,7 +90,7 @@ ENDPROC
 
 \subsection{Eckpunkte abfahren}
 
-Bei diesem Schritt muss man zunächst auf dem FlexPendant als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobjekt \enquote{wobj0} eingestellen. Danach könne wie in Abbildung ~\ref{eckpunkte} dargestellt, die drei Positionen abgefahren und jeweils die X-,Y- und Z-Koordinaten notiert werden. Dabei darf der Roboter nur lineare bewegt werden. Dabei sollte man bei \enquote{Position 1} möglichst genau in die Ecke fahren, da dies der Ursprung des Werkobjekt-Koordinatensystems ist. 
+Bei diesem Schritt muss man zunächst auf dem FlexPendant als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobject \enquote{wobj0} einstellen. Danach können wie in Abbildung ~\ref{eckpunkte} dargestellt, die drei Positionen abgefahren und jeweils die X-,Y- und Z-Koordinaten notiert werden. Dabei darf der Roboter nur lineare bewegt werden. Außerdem sollte man bei \enquote{Position 1} möglichst genau in die Ecke fahren, da dies später der Ursprung des Werkobjekt-Koordinatensystems sein wird. 
 
 \begin{figure}[htbp]
 \centering
@@ -99,39 +99,41 @@ Bei diesem Schritt muss man zunächst auf dem FlexPendant als Koordinatensystem 
 \label{eckpunkte}
 \end{figure}
 
-\subsection{Workobjekt erzeugen}
+\subsection{Workobject erzeugen}
 
 \begin{wrapfigure}{l}{.4\textwidth}
 \centering
 \includegraphics[height=.45\textwidth]{Wobj_anlegen.PNG}
 \vspace{-15pt}
-\caption{Workobjekt über drei Punkte definieren} 
+\caption{Workobject über drei Punkte definieren} 
 \label{dreipunkte}
 \end{wrapfigure}
 
-Mit Hilfe der notierten Koordinaten, kann in Robotstudio ein neues Workobjekt angelegt werden. Dazu muss auch hier zunächst sichergestellt werden, dass als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobjekt \enquote{wobj0} eingestellt ist. Zum erzeugen eines neuen Workobjekts klickt man unter dem Reiter \enquote{Home} auf \enquote{Other} und anschließend auf \enquote{Creat Workobjekt}. In der linken Leiste öffnet sich ein entsprechendes Konfigurationmenü. Hier muss man nun das Feld \enquote{Frame by points} ausklappen und den Radio-Button \enquote{Three-point} auswählen (siehe Abb. ~\ref{dreipunkte}). Nun können hier für die drei Punkte die notierten Koordinaten  in der vorgegebenen Reihenfolge eingegeben werden.  
+Mit Hilfe der notierten Koordinaten, kann in Robotstudio ein neues Workobject angelegt werden. Dazu muss auch hier zunächst sichergestellt werden, dass als Koordinatensystem \enquote{Welt}, als Werkzeug \enquote{tool0} und als Workobject \enquote{wobj0} eingestellt ist. Zum erzeugen eines neuen Workobjects klickt man unter dem Reiter \enquote{Home} auf \enquote{Other} und anschließend auf \enquote{Creat Workobject}. In der linken Leiste öffnet sich ein entsprechendes Konfigurationmenü. Hier muss man nun das Feld \enquote{Frame by points} ausklappen und den Radio-Button \enquote{Three-point} auswählen (siehe Abb. ~\ref{dreipunkte}). Nun können hier für die drei Punkte die notierten Koordinaten  in der vorgegebenen Reihenfolge eingegeben werden.  
 
-Die Definition diese Workobjekts findet man anschließend in der Datei \enquote{CalibData} der \enquote{Current-Station} im Verzeichnis \enquote{RAPID}. Um diese Datei zu aktualisieren, muss man zunächst eine Synchronisation mit der Station vornehmen. Dafür einfach im Reiter \enquote{RAPID} in der oberen Menüleiste auf \enquote{Sychronize} und dann auf \enquote{Synchronize to RAPID} klicken. 
+Die Definition diese Workobjects findet man anschließend in der Datei \enquote{CalibData} der \enquote{Current-Station} im Verzeichnis \enquote{RAPID}. Um diese Datei zu aktualisieren, muss man zunächst eine Synchronisation mit der Station vornehmen. Dafür einfach im Reiter \enquote{RAPID} in der oberen Menüleiste auf \enquote{Sychronize} und dann auf \enquote{Synchronize to RAPID} klicken. 
 
 Übertragen Sie anschließend die neuen Daten auf den Roboter. Dies können Sie wieder über die \enquote{Relation} machen, oder wenn der Roboter sich im Automatik-Modus befindet auch durch Editieren der Datei \enquote{CalibData} auf dem Controller des Roboters. 
 Ersetzen Sie dazu die alte Definition von \enquote{wobj\_Table} durch die soeben erstellte. 
 
-Wie weit sich der Roboter entlang der x- bzw. y- Achse bewegen kann, können Sie über die Variablen \enquote{xMax} bzw. \enquote{yMax} einstellen. Wie weit er sich in der Mitte (bei x = 345) nach vorne bewegen kann über die Variable \enquote{xMaxMitte}. So wie wir den Roboter konfiguriert hatten, ergab sich ein Koordinatensystem für den Roboter wie es in Abbildung ~\ref{koordintensystem} dargestellt ist. 
+Wie weit sich der Roboter entlang der x- bzw. y- Achse bewegen kann, können Sie über die Variablen \enquote{xMax} bzw. \enquote{yMax} einstellen. Wie weit er sich in der Mitte (bei y = 345) nach vorne bewegen kann über die Variable \enquote{xMaxMitte}. So wie wir den Roboter konfiguriert hatten, ergab sich ein Koordinatensystem für den Roboter wie es in Abbildung ~\ref{koordintensystem} auf Seite ~\pageref{koordintensystem} dargestellt ist. 
 
 \section{Ein Spiel starten}
 \label{starten}
-In diesem Abschnitt wird Schritt für Schritt beschrieben, wie man ein Spiel startet, wenn an den beiden Rechnern und dem Roboter seit Beendigung unserer Studienarbeit nichts mehr verändert wurde, oder bereits die Anweisungen der beiden vorhergehenden Abschnitte erfolgreich umgesetzt wurden.
+In diesem Abschnitt wird Schritt für Schritt beschrieben, wie man ein Spiel startet, wenn an den beiden Rechnern und dem Roboter seit Beendigung unserer Studienarbeit nichts mehr verändert wurde, oder bereits die Anweisungen der beiden vorhergehenden Abschnitte erfolgreich umgesetzt wurden. 
+
+Falls Sie zum ersten Mal ein Spiel starten, vergewissern Sie sich zunächst, ob sich die IP-Adressen geändert haben. Der PC mit der Bilderkennung hatte die IP-Adresse \enquote{192.168.28.222}. Hat sich diese geändert, müssen die Datei \enquote{positionenAbfahren} auf dem Controller des Roboters und bei der Bilderkennung die Funktion \enquote{\_\_init\_\_} in der Datei \enquote{Connection.py} entsprechend geändert werden. 
 
 \subsection{Roboter-Programm starten} 
 Zuerst muss das RAPID-Programm auf dem Roboter-Controller gestartet werden. Dazu müssen folgende sechs Schritte durchgeführt werden:  
 \begin{enumerate}
 \item Öffnen Sie RobotStudio auf dem Windows-PC und öffnen Sie die Datei \enquote{Airhockey2.0.rssln}. Sofern Sie noch den selben Rechner verwenden finden Sie diese Datei auf Laufwerk C im Ordner \enquote{Airhockey2.0}. Andernfalls in dem Verzeichnis, indem Sie das Projekt entpackt haben. 
 
-\item Stellen Sie zunächst sicher, dass er eingeschaltet ist und auf Automatik-Betrieb eingestellt ist (Schalter 4 in Abb. ~\ref{schaltschrank} nach links drehen). Gehen Sie dann in RobotStudio unter dem Reiter \enquote{Controller} auf \enquote{Add Controller}. Der Roboter-Controller hat die IP-Adresse 192.168.28.121 und sollte ganz unten im Drop-Down-Menü zu finden sein (siehe Abb. ~\ref{controller1}). Oft muss man um ihn auswählen zu können, das Menü nochmal einklappen und dann erneut auf \enquote{Add Controller} klicken.
+\item Stellen Sie zunächst sicher, dass der Roboter eingeschaltet ist und auf Automatik-Betrieb eingestellt ist (Schalter 4 in Abb. ~\ref{schaltschrank} nach links drehen). Gehen Sie dann in RobotStudio unter dem Reiter \enquote{Controller} auf \enquote{Add Controller}. Der Roboter-Controller hat die IP-Adresse 192.168.28.121 und sollte ganz unten im Drop-Down-Menü zu finden sein (siehe Abb. ~\ref{controller1}). Oft muss man um ihn auswählen zu können, das Menü nochmal einklappen und dann erneut auf \enquote{Add Controller} klicken.
 
 \item Wechseln Sie in den Reiter \enquote{RAPID} und öffnen Sie die Datei \enquote{positioinenAbfahren} im Verzeichnis \enquote{RAPID} aus dem Roboter-Controller (14M-63471(192.168.28.121))(siehe Abb. ~\ref{controller2}). Fordern Sie nun Schreibzugriff auf den Roboter-Controller an, indem Sie auf den Knopf \enquote{Request Write Acces} drücken. 
 
-\item Starten Sie die Motoren des Roboters durch drücken von Schalter 3 am Schaltschrank(siehe Abb. ~\ref{schaltschrank}).
+\item Starten Sie die Motoren des Roboters durch drücken von Schalter 3 am Schaltschrank(siehe Abb. ~\ref{schaltschrank} auf Seite ~\pageref{schaltschrank}).
 
 \item Setzen Sie als nächstes den Programm-Zeiger zurück. Klicken Sie dazu auf \enquote{Program Pointer} und wählen Sie dann \enquote{Set Program Pointer to Main in all tasks}. Diesen Schritt müssen auch vor jedem weiteren Start des Programmes durchführen, da zu Beginn immer erst eine Verbindung mit der Bilderkennung aufgebaut werden muss.
 
@@ -158,9 +160,9 @@ Zuerst muss das RAPID-Programm auf dem Roboter-Controller gestartet werden. Dazu
 sh table_setup 0 30
 \end{lstlisting} 
 
-\item Das Programm versucht nun zunächst eine Verbindung mit dem Roboter-Controller auf zu bauen. Erst wenn dies erfolgreich war, öffnet sich ein Fenster, in dem ein Standbild des Tisches zu sehen ist. Darin muss nun zunächst das Spielfeld eingezeichnet werden. Dazu müssen Sie zunächst den die untere linke Ecke und anschließend die obere rechte Ecke des Spielfeldes mit einem Doppelklick markieren (siehe Abb. ~\ref{spielfeld}). Dabei ist sehr wichtig, dass die Punkte genau in dieser Reihenfolge markiert werden, da ansonsten die Bilderkennung ein falsches Koordinatensystem zur Berechnung verwendet.   
+\item Das Programm versucht nun zunächst eine Verbindung mit dem Roboter-Controller auf zu bauen. Erst wenn dies erfolgreich war, öffnet sich ein Fenster, in dem ein Standbild des Tisches zu sehen ist. Darin muss nun zunächst das Spielfeld eingezeichnet werden. Dazu müssen Sie zunächst die untere linke Ecke und anschließend die obere rechte Ecke des Spielfeldes mit einem Doppelklick markieren (siehe Abb. ~\ref{spielfeld}). Dabei ist sehr wichtig, dass die Punkte genau in dieser Reihenfolge markiert werden, da ansonsten die Bilderkennung ein falsches Koordinatensystem zur Berechnung verwendet.   
 
-\item Haben Sie alle vorherigen Schritte erfolgreich abgearbeitet, können Sie nun Air-Hockey gegen den ABB-Roboter spielen. Wir wünschen Ihnen viel Spaß dabei. Zum Beenden des Bilderkennung einfach in im Terminal \enquote{Strg + C} eingeben.   
+\item Haben Sie alle vorherigen Schritte erfolgreich abgearbeitet, können Sie nun Air-Hockey gegen den ABB-Roboter spielen. Wir wünschen Ihnen viel Spaß dabei. Zum Beenden des Bilderkennung einfach im Terminal \enquote{Strg + C} eingeben.   
 
 \end{enumerate} 
 

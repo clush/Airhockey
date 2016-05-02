@@ -47,7 +47,7 @@ for y in range(0, 691, 10):
 \end{lstlisting} 
 
 \section{Versuchsauswertung}
-Dadurch dass die Messwerte als \enquote{Comma-separated values} gespeichert werden, ist es einfach möglich diese Csv-Datei in einem Tabellenkalkulationsprogramm wie beispielsweise Ecxel zu öffnen. 
+Dadurch dass die Messwerte als \enquote{Comma-Separated Values} gespeichert werden, ist es einfach möglich diese Csv-Datei in einem Tabellenkalkulationsprogramm wie beispielsweise Excel zu öffnen. 
 
 Zur Auswertung wurde zunächst der Messtabelle eine weitere Spalte mit der jeweils zurückgelegten Strecke hinzugefügt. Diese wurde mit folgender Formel berechnet: 
 
@@ -55,7 +55,7 @@ Zur Auswertung wurde zunächst der Messtabelle eine weitere Spalte mit der jewei
 \Delta s=\sqrt{(x_{end}-x_{Start})^{2}+(y_{end}-y_{Start})^{2}}
 \end{equation} 
 
-Die zurückgelegt Strecke wurde dann über der dafür jeweils benötigten Zeit in einem Diagramm eingetragen. Auf diese Weise wird  einerseits der Zusammenhang der beiden Größen anschaulich dargestellt. Zum anderen ist es auch möglich eine Trendlinie durch die Punkte zu legen und sich deren Gleichung angeben zu lassen. Auf diese Weise gelangt man zu einer mathematischen Beschreibung, die den Zusammenhang zwischen Weg und Zeit approximiert. Wie gut eine solche Näherung ist, kann durch das Bestimmtheitsmaß ($ R^2 $)angegeben werden. Dabei handelt es sich um ein Maß aus der Statistik für den erklärten Anteil der Varianz einer abhängigen Variablen durch ein statistisches Modell. \cite{wiki:2016}
+Die zurückgelegt Strecke wurde dann über der dafür jeweils benötigten Zeit in einem Diagramm eingetragen. Auf diese Weise wird  einerseits der Zusammenhang der beiden Größen anschaulich dargestellt. Zum anderen ist es auch möglich eine Trendlinie durch die Punkte zu legen und sich deren Gleichung angeben zu lassen. Auf diese Weise gelangt man zu einer mathematischen Beschreibung, die den Zusammenhang zwischen Weg und Zeit approximiert. Wie gut eine solche Näherung ist, kann durch das Bestimmtheitsmaß ($ R^2 $) angegeben werden. Dabei handelt es sich um ein Maß aus der Statistik für den erklärten Anteil der Varianz einer abhängigen Variablen durch ein statistisches Modell. \cite{wiki:2016}
 
 Auf diese Weise wurden nun unterschiedliche Bewegungen des Roboters ausgewertet. Dabei zeigte sich, dass sich die Bewegungen des Roboters in den meisten Fällen sehr gut mit einer linearen Trendlinie beschreiben lassen. So konnten die Bewegungen entlang der y-Achse (siehe ~\ref{yAchse}) und entlang der x-Achse (siehe ~\ref{xAchse}) durch eine lineare Trendlinie angenähert werden, deren Bestimmtheitsmaß über 99\% liegt. 
 
@@ -73,7 +73,7 @@ Auf diese Weise wurden nun unterschiedliche Bewegungen des Roboters ausgewertet.
 \label{xAchse}
 \end{figure} 
 
-Bei Diagonal-Bewegungen fiel auf, dass es sich dabei zwar auch um einen linearen Zusammenhang zwischen Weg und Zeit handelt (siehe ~\ref{diagonal}), dieser sich jedoch nicht ganz so genau mathematisch darstellen lässt ($ R^2 < 0,99 $). Des weiteren fiel auf, dass sich die die Steigungen und y-Achsenabschnitte der Geraden-Gleichung sehr stark unterscheiden ja nachdem wo man den Startpunkt wählt und wie man die x- bzw. y- Koordinaten der Endpunkte bei einem Durchlauf variiert. 
+Bei Diagonal-Bewegungen fiel auf, dass es sich dabei zwar auch um einen linearen Zusammenhang zwischen Weg und Zeit handelt (siehe ~\ref{diagonal}), dieser sich jedoch nicht ganz so genau mathematisch darstellen lässt ($ R^2 < 0,99 $). Des weiteren fiel auf, dass sich die Steigungen und y-Achsenabschnitte der Geraden-Gleichung sehr stark unterscheiden, je nachdem wo man den Startpunkt wählt und wie man die x- bzw. y- Koordinaten der Endpunkte bei einem Durchlauf variiert. 
 
 
 \begin{figure}[htbp]
@@ -85,13 +85,13 @@ Bei Diagonal-Bewegungen fiel auf, dass es sich dabei zwar auch um einen linearen
 
 Wir haben uns deshalb dazu entschlossen, dass wir den Schläger nur auf festgelegten Bahnen fahren lassen. So wird eine Diagonal-Bewegung aufgeteilt in zwei Bewegungen: Zunächst eine Bewegung entlang der y-Achse auf der Grundlinie und anschließend eine Bewegung entlang der x-Achse. 
 
-Zur Berechnung der Zeit, die der Roboter benötigt, um eine gewisse Strecke $ \Delta y $auf der Grundlinie zurückzulegen, kann die Gleichung der linearen Trendlinie verwendet werden (siehe Abb. ~\ref{yAchse}). Diese muss nur etwas umgestellt werden und man erhält folgende Gleichung zur Berechnung von $ t_y $ bei gegebenem $ \Delta y $:
+Zur Berechnung der Zeit, die der Roboter benötigt, um eine gewisse Strecke $ \Delta y $ auf der Grundlinie zurückzulegen, kann die Gleichung der linearen Trendlinie verwendet werden (siehe Abb. ~\ref{yAchse}). Diese muss nur etwas umgestellt werden und man erhält folgende Gleichung zur Berechnung von $ t_y $ bei gegebenem $ \Delta y $:
 
 \begin{equation}
 t_y =\frac{\Delta y + 238,4}{1579,1}
 \end{equation} 
 
-Die Berechnung der Zeit, die der Roboter benötigt um eine Strecke entlang der x-Achse zurückzulegen, gestaltet sich etwas schwieriger. Es hat sich nämlich gezeigt, dass Steigung und y-Achsenabschnitt der unterschiedlichen Geradengleichungen abhängig von der y-Koordinate ist, an der die Bewegung ausgeführt wird. Aus diesem Grund wurde eine Messung durchgeführt, bei der für 25 verschiedene y-Koordinaten die Bewegung entlang der x-Achse untersucht wurde. Dabei wurde für jede y-Koordinate jeweils die Gleichung der linearen Trendlinie bestimmt. Daraufhin wurden die Steigungen und y-Achsenabschnitte dieser Geradengleichungen über ihren entsprechenden y-Koordinaten in Diagramme eingezeichnet (siehe Abb. ~\ref{anstieg} und Abb. ~\ref{offset}). Dabei zeigte sich, dass die Abhängigkeiten dieser beiden Größen zur y-Koordinate jeweils durch ein Polynom zweiten Grades annähern kann. Mit den entsprechenden Trendlinie-Gleichungen kann dann die Steigung und der y-Achsenabschnitts bei vorgegebener y-Koordinate bestimmt werden. 
+Die Berechnung der Zeit, die der Roboter benötigt um eine Strecke entlang der x-Achse zurückzulegen, gestaltet sich etwas schwieriger. Es hat sich nämlich gezeigt, dass Steigung und y-Achsenabschnitt der unterschiedlichen Geradengleichungen abhängig von der y-Koordinate sind, an der die Bewegung ausgeführt wird. Aus diesem Grund wurde eine Messung durchgeführt, bei der für 25 verschiedene y-Koordinaten die Bewegung entlang der x-Achse untersucht wurde. Dabei wurde für jede y-Koordinate jeweils die Gleichung der linearen Trendlinie bestimmt. Daraufhin wurden die Steigungen und y-Achsenabschnitte dieser Geradengleichungen über ihren entsprechenden y-Koordinaten in Diagramme eingezeichnet (siehe Abb. ~\ref{anstieg} und Abb. ~\ref{offset}). Dabei zeigte sich, dass man die Abhängigkeiten dieser beiden Größen zur y-Koordinate jeweils durch ein Polynom zweiten Grades annähern kann. Mit den entsprechenden Trendlinien-Gleichungen kann dann die Steigung und der y-Achsenabschnitts bei vorgegebener y-Koordinate bestimmt werden. 
 
 \begin{figure}[htbp]
 \centering
@@ -114,7 +114,8 @@ Die Berechnung der Zeit, die der Roboter benötigt um eine Strecke entlang der x
 \label{mitte}
 \end{figure}
   
-Beim Airhockey spielen fiel auf, dass der Puck häufig in eine Pendelbewegung zwischen den beiden langen Banden verfällt. Da die Reichweite des Roboter in y-Richtung jedoch nur 260 mm beträgt, konnte er den Puck oft nicht erreichen und man musste um weiterspielen zu können entweder lange warten, bis der Puck von alleine wieder in unsere Hälfte glitt, oder man musste den Puck mit einem Zollstock anstupsen. 
+Beim Airhockey spielen fiel auf, dass der Puck häufig in eine Pendelbewegung zwischen den beiden langen Banden verfällt. Da die Reichweite des Roboter in y-Richtung jedoch nur 260 mm beträgt, konnte er den Puck oft nicht erreichen und man musste um weiterspielen zu können entweder lange warten, bis der Puck von alleine wieder in die Spielerhälfte glitt, oder man musste den Puck mit einem Zollstock anstupsen. 
+
 Da die Reichweite des Roboter in der Mitte des Spielfeldes (bei y = 345) um einiges höher ist als an den Rändern, nämlich 386 mm, wurde eine Strategie ergänzt um einen besseren Spielfluss zu erreichen. Diese sieht vor, dass sobald eine Pendelbewegung vorliegt der Schläger in die Mitte gefahren wird. Von da aus kann er sich dann weiter nach vorne bewegen als sonst. 
 Bei der Untersuchung der Bewegung in x-Richtung an dieser Stelle (y=345) fiel auf, dass sich die Bewegung für diese längere Strecke nun nicht mehr gut genug durch eine lineare Trendlinie approximieren lässt (siehe Abb. ~\ref{mitte}). Vielmehr musste man hier ein Polynom zweiten Grades verwenden. Um an dieser Stellen nun für eine gegebene Strecke $ \Delta y $ die entsprechende Zeit $ t_y $ berechnen zu können, musste die Gleichung der Trendlinie noch entsprechend umgeformt werden. Dabei ergab sich folgende Gleichung:
 
@@ -123,8 +124,9 @@ t_y = \dfrac{-1863+\sqrt{1893^2-4*(-1284)*(-258,82-\Delta y)}}{2*(-1284)}
 \end{equation} 
 
 \section{Schlussfolgerungen}
+\label{fazitbewegung}
 Ohne diese Untersuchung der Roboterbewegung wäre es nicht möglich gewesen einen Angriffsschlag zu implementieren. Die Approximation die hierbei erarbeitet wurden, sind in sofern ausreichend, dass der Roboter meistens den Puck trifft sobald er einen Angriffsschlag durchführt. 
 
 Die Beschränkung der Roboterbewegungen auf Bewegungen entlang der x- und y-Achse ist jedoch sehr stark und lässt kaum ausgefeiltere Strategien zu. Außerdem fiel auf, dass der Roboter den Puck bei einer Pendelbewegung häufig verfehlt, obwohl extra für diesen Fall eine eigene Funktion zur Berechnung der benötigten Zeit erarbeitet wurde. 
 
-Zur Behebung dieser beiden Probleme könnten man anstatt kontinuierliche Werte für die Koordinaten zu verwenden nur diskrete Werte zulassen. Zum Beispiel für die x-Koordinate nur die Werte 0,30,60, ... ,690 und für die y-Koordinate nur 0,26,52, ... ,260. Man könnte dann mit dem Schläger 254 verschieden Positionen anfahren. Misst man anschließend von jeder Position aus wie lange man benötigt um von hier aus zu allen anderen Positionen zu gelangen, könnten man die entsprechenden Zeiten in eine Lookup-Table eintragen. Mit einer solchen Implementierung wären dann auch Diagonal-Bewegungen ohne weiteres möglich. Die Erzeugung einer solchen Lookup-Table ist jedoch extrem aufwendig. Es wäre deshalb ratsam zunächst zu testen, ob man dadurch merkliche Verbesserungen erzielen kann. Anbieten würde sich dafür die Bewegung in x-Richtung in der Mitte des Tisches, da dafür sowieso schon einen eigene Funktion verwendet wird und man dabei eine Verbesserung auch deutlich merken sollte. 
+Zur Behebung dieser beiden Probleme könnten man anstatt kontinuierliche Werte für die Koordinaten zu verwenden nur diskrete Werte zulassen. Zum Beispiel für die x-Koordinate nur die Werte 0, 30, 60, ... , 690 und für die y-Koordinate nur 0, 26, 52, ... , 260. Man könnte dann mit dem Schläger 254 verschieden Positionen anfahren. Misst man anschließend von jeder Position aus wie lange man benötigt um von hier aus zu allen anderen Positionen zu gelangen, könnten man die entsprechenden Zeiten in eine Lookup-Table eintragen. Mit einer solchen Implementierung wären dann auch Diagonal-Bewegungen ohne weiteres möglich. Die Erzeugung einer solchen Lookup-Table ist jedoch extrem aufwendig. Es wäre deshalb ratsam zunächst zu testen, ob man dadurch merkliche Verbesserungen erzielen kann. Anbieten würde sich dafür die Bewegung in x-Richtung in der Mitte des Tisches, da dafür sowieso schon einen eigene Funktion verwendet wird und man dabei eine Verbesserung auch deutlich merken sollte. 

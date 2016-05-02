@@ -2,8 +2,27 @@
 
 \chapter{Fazit und Ausblick}
 
-digitale Werte verwenden 
+Ziel dieser Studienarbeit war es aufbauend auf zwei anderen Studienarbeiten eine Software zu entwickeln, welche es einem Roboter ermöglicht, gegen einen menschlichen Gegenspieler Air-Hockey zu spielen. Diese Ziel wurde in weiten Teilen erfüllt. 
 
-Achsen direkt ansteuern
+Am Anfang des Projekts wurde einiges an Zeit dafür benötigt, sich in die Bedienkonzept des Roboters einzuarbeiten und um die Bildverarbeitungssoftware der Vorgänger-Gruppe auf einem neu aufgesetzten Linux-Rechner wieder zum laufen zu bringen. Letzterer Punkt ist auch der Grund dafür, warum wir in Kapitel ~\ref{manual} eine detaillierte und hoffentlich auch verständliche Anleitung geschrieben haben, welche Schritte notwendig sind, um das Projekt wieder neu aufzusetzen. 
 
-Wenn Schläger schneller an Position fahren kann, dann bei MoveL Instruktion optionalen Übergabeparameter Zeit verwenden.
+Im Anschluss an diese Einarbeitungsphase konnte eine Kommunikation zwischen Roboter-Controller und Bildverarbeitung realisiert werden und Roboterarm so die ersten Bewegungsbefehle übermittelt werden. 
+
+Bei der Implementierung einer offensiven Spielstrategie, bei der Roboter den Puck zurückschlagen soll, zeigte sich, dass es einige Faktoren gibt, die die Fähigkeiten des Roboters Air-Hockey zu spielen stark einschränken. Manche dieser Probleme konnten auf Grund mangelnder Zeit nicht mehr in dieser Studienarbeit behoben werden. Im folgenden werden die größten noch bestehenden Problem aufgelistet und mögliche Lösungsansätze vorgestellt, mit denen es nachfolgenden Gruppen vielleicht möglich ist das Air-Hockey-Spiel des ABB-Roboters zu verbessern.
+
+\begin{enumerate}
+\item \textbf{Ungenaue Bewegungsvorhersage des Schlägers:} 
+
+Dazu wurde bereits in Abschnitt ~\ref{fazitbewegung} auf Seite ~\pageref{fazitbewegung} ein Verfahren beschrieben, bei dem man anstatt kontinuierliche Positionswerte nur diskrete Werte benutzt. 
+Eine weitere Verbesserung des Spielverhaltens könnte man dadurch erreichen, dass man bei der MoveL-Instruktion den Übergabeparameter Zeit einsetzt (siehe Abschnitt ~\ref{movesection} auf Seite ~\pageref{movesection}). Anstatt bei einer Bewegung in x-Richtung auf einen passenden Zeitpunkt zu warten, könnte man damit den Schläger mit variabler Geschwindigkeit zur Zielposition fahren.     
+ 
+\item \textbf{Ungenaue Bewegungsvorhersage des Pucks:}
+
+Es fiel auf, dass die berechnete Bewegung des Pucks bei einer Reflexion an einer Bande oft nicht mit der tatsächlichen Bewegung übereinstimmt. Dies liegt daran, dass bei den Berechnungen eine ideale Reflexion angenommen wurde, bei der also Ausfallswinkel gleich Einfallswinkel ist. Um den realen Stoßprozess besser approximieren zu können, bedarf es weitere Untersuchungen um geeignete Stoßzahlen zu ermitteln und diese in den entsprechenden Gleichungen einfügen zu können.
+
+\item \textbf{Hohe Reaktionszeit und zu geringe Geschwindigkeit:}
+
+Es fiel auf, dass des Roboter-Controller ein gewisse Zeit braucht, um aus den Positionsdaten entsprechende Bewegungsbefehle zu berechnen. Des weiteren, dass vor allem die Bewegung entlang der x-Achse ziemlich langsam ist. Beides könnte durch eine direkte Ansteuerung der Roboterachsen verbessert werden.   
+
+\end{enumerate}
+

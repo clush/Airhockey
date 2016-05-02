@@ -25,26 +25,14 @@ PROC main()
 Target:=[[x,y,z],[0,1,0,0],[-1,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]];
 MoveL Target,v5000,fine,tool0\WObj:=Workobject_Table;
     
-!SocketCreate server_socket;
-!SocketBind server_socket, "192.168.28.121", 1025;
-!SocketListen server_socket;
-
 SocketCreate my_socket;
 SocketConnect my_socket,"192.168.28.222", 1025 \Time:=WAIT_MAX;
 
 
 WHILE (TRUE) DO
 
-
-SocketReceive my_socket \Str:= receive_string \Time:=WAIT_MAX; 
-!SocketClose my_socket;
-    
-!SocketAccept server_socket, client_socket \ClientAddress:=client_ip \Time:=WAIT_MAX;
 !Empfange Daten
-!SocketReceive client_socket \Str := receive_string \Time:=WAIT_MAX;
-!SocketClose client_socket;
-
-
+SocketReceive my_socket \Str:= receive_string \Time:=WAIT_MAX; 
 
 found := StrFind(receive_string,1,";");
 
