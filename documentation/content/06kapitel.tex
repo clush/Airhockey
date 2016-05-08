@@ -17,7 +17,7 @@ Alle nötigen Dateien finden Sie im GitHub-Repositorie \href{https://github.com/
 Alle nötigen Dateien für die Bilderkennung befinden sich im Ordner \enquote{aihockey} in unserem GitHub-Repository. Um das Programm starten zu können, muss OpenCV und Python auf dem Rechner installiert sein. Für die Installation von OpenCV können Sie das Shell-Script \enquote{install-opencv.sh} verwenden, welches ebenfalls in unserem GitHub-Repository zu finden ist. Dieses haben wir auf einem Debian-System getestet. 
 
 Sollte es wider erwarten zu Problemen kommen, finden Sie in der Studienarbeit \enquote{\textit{Roboter lernt Air-Hockey spielen}} von Sebastian Bezold, Christian Füller und Fabian Nagel in Abschnitt 3.2 eine ausführlichere Beschreibung zur Einrichtung der Produktivumgebung für die Bilderkennung.
-
+\pagebreak
 \subsection{RAPID-Programm auf Controller des Roboters laden}
 
 \begin{wrapfigure}{r}{.4\textwidth}
@@ -116,7 +116,7 @@ Die Definition diese Workobjects findet man anschließend in der Datei \enquote{
 Übertragen Sie anschließend die neuen Daten auf den Roboter. Dies können Sie wieder über die \enquote{Relation} machen, oder wenn der Roboter sich im Automatik-Modus befindet auch durch Editieren der Datei \enquote{CalibData} auf dem Controller des Roboters. 
 Ersetzen Sie dazu die alte Definition von \enquote{wobj\_Table} durch die soeben erstellte. 
 
-Wie weit sich der Roboter entlang der x- bzw. y- Achse bewegen kann, können Sie über die Variablen \enquote{xMax} bzw. \enquote{yMax} einstellen. Wie weit er sich in der Mitte (bei y = 345) nach vorne bewegen kann über die Variable \enquote{xMaxMitte}. So wie wir den Roboter konfiguriert hatten, ergab sich ein Koordinatensystem für den Roboter wie es in Abbildung ~\ref{koordintensystem} auf Seite ~\pageref{koordintensystem} dargestellt ist. 
+Wie weit sich der Roboter entlang der x- bzw. y- Achse bewegen kann, können Sie über die Variablen \enquote{xMax} bzw. \enquote{yMax} einstellen. Wie weit er sich in der Mitte (bei y = 345) nach vorne bewegen kann über die Variable \enquote{xMaxMitte}. So wie wir den Roboter konfiguriert hatten, ergab sich ein Koordinatensystem für den Roboter wie es in Abbildung~\ref{koordintensystem} auf Seite~\pageref{koordintensystem} dargestellt ist. 
 
 \section{Ein Spiel starten}
 \label{starten}
@@ -144,7 +144,7 @@ Zuerst muss das RAPID-Programm auf dem Roboter-Controller gestartet werden. Dazu
 \begin{enumerate}
 \item Stellen Sie zunächst sicher, dass die Kamera an den Linux-Rechner angeschlossen ist.
 
-\item Öffnen Sie das Terminal und navigieren Sie ins Verzeichnis \enquote{Schreibtisch/Airhockey/airhockey}
+\item Öffnen Sie das Terminal und navigieren Sie ins Verzeichnis \enquote{home/student/Schreibtisch/Airhockey/airhockey} oder dort wo sie das Programm abgespeichert haben
 
 
 \begin{figure}[htbp]

@@ -4,17 +4,17 @@
 
 Ziel dieser Studienarbeit war es aufbauend auf zwei anderen Studienarbeiten eine Software zu entwickeln, welche es einem Roboter ermöglicht, gegen einen menschlichen Gegenspieler Air-Hockey zu spielen. Diese Ziel wurde in weiten Teilen erfüllt. 
 
-Am Anfang des Projekts wurde einiges an Zeit dafür benötigt, sich in die Bedienkonzept des Roboters einzuarbeiten und um die Bildverarbeitungssoftware der Vorgänger-Gruppe auf einem neu aufgesetzten Linux-Rechner wieder zum laufen zu bringen. Letzterer Punkt ist auch der Grund dafür, warum wir in Kapitel ~\ref{manual} eine detaillierte und hoffentlich auch verständliche Anleitung geschrieben haben, welche Schritte notwendig sind, um das Projekt wieder neu aufzusetzen. 
+Am Anfang des Projekts wurde einiges an Zeit dafür benötigt, sich in die Bedienkonzept des Roboters einzuarbeiten und um die Bildverarbeitungssoftware der Vorgänger-Gruppe auf einem neu aufgesetzten Linux-Rechner wieder zum laufen zu bringen. Letzterer Punkt ist auch der Grund dafür, warum wir in Kapitel~\ref{manual} eine detaillierte und hoffentlich auch verständliche Anleitung geschrieben haben, welche Schritte notwendig sind, um das Projekt wieder neu aufzusetzen. 
 
-Im Anschluss an diese Einarbeitungsphase konnte eine Kommunikation zwischen Roboter-Controller und Bildverarbeitung realisiert werden und Roboterarm so die ersten Bewegungsbefehle übermittelt werden. 
+Im Anschluss an diese Einarbeitungsphase konnte eine Kommunikation zwischen Roboter-Controller und Bildverarbeitung realisiert werden und dem Roboterarm so die ersten Bewegungsbefehle übermittelt werden. 
 
-Bei der Implementierung einer offensiven Spielstrategie, bei der Roboter den Puck zurückschlagen soll, zeigte sich, dass es einige Faktoren gibt, die die Fähigkeiten des Roboters Air-Hockey zu spielen stark einschränken. Manche dieser Probleme konnten auf Grund mangelnder Zeit nicht mehr in dieser Studienarbeit behoben werden. Im folgenden werden die größten noch bestehenden Problem aufgelistet und mögliche Lösungsansätze vorgestellt, mit denen es nachfolgenden Gruppen vielleicht möglich ist das Air-Hockey-Spiel des ABB-Roboters zu verbessern.
+Bei der Implementierung einer offensiven Spielstrategie, bei der der Roboter den Puck zurückschlagen soll, zeigte sich, dass es einige Faktoren gibt, die die Fähigkeiten des Roboters Air-Hockey zu spielen stark einschränken. Manche dieser Probleme konnten auf Grund mangelnder Zeit nicht mehr in dieser Studienarbeit behoben werden. Im folgenden werden die größten noch bestehenden Problem aufgelistet und mögliche Lösungsansätze vorgestellt, mit denen es nachfolgenden Gruppen vielleicht möglich ist das Air-Hockey-Spiel des ABB-Roboters zu verbessern.
 
 \begin{enumerate}
 \item \textbf{Ungenaue Bewegungsvorhersage des Schlägers:} 
 
-Dazu wurde bereits in Abschnitt ~\ref{fazitbewegung} auf Seite ~\pageref{fazitbewegung} ein Verfahren beschrieben, bei dem man anstatt kontinuierliche Positionswerte nur diskrete Werte benutzt. 
-Eine weitere Verbesserung des Spielverhaltens könnte man dadurch erreichen, dass man bei der MoveL-Instruktion den Übergabeparameter Zeit einsetzt (siehe Abschnitt ~\ref{movesection} auf Seite ~\pageref{movesection}). Anstatt bei einer Bewegung in x-Richtung auf einen passenden Zeitpunkt zu warten, könnte man damit den Schläger mit variabler Geschwindigkeit zur Zielposition fahren.     
+Dazu wurde bereits in Abschnitt~\ref{fazitbewegung} auf Seite~\pageref{fazitbewegung} ein Verfahren beschrieben, bei dem man anstatt kontinuierliche Positionswerte nur diskrete Werte benutzt. 
+Eine weitere Verbesserung des Spielverhaltens könnte man dadurch erreichen, dass man bei der MoveL-Instruktion den Übergabeparameter Zeit einsetzt (siehe Abschnitt~\ref{movesection} auf Seite~\pageref{movesection}). Anstatt bei einer Bewegung in x-Richtung auf einen passenden Zeitpunkt zu warten, könnte man damit den Schläger mit variabler Geschwindigkeit zur Zielposition fahren.     
  
 \item \textbf{Ungenaue Bewegungsvorhersage des Pucks:}
 
